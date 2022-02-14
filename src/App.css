@@ -15,34 +15,36 @@ a {
 }
 
 .gradient__bg {
-    background:-moz-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
-  
-    /* safari 5.1+,chrome 10+ */
-    background:-webkit-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
-  
-    /* opera 11.10+ */
-    background:-o-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
-  
-    /* ie 10+ */
-    background:-ms-radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
-  
-    /* global 92%+ browsers support */
-    background:radial-gradient(circle at 3% 25%, rgba(0, 40, 83, 1) 0%, rgba(4, 12, 24, 1) 25%);
-  }
+  /* ff 3.6+ */
+  background:-moz-radial-gradient(circle at 2% 3%, rgba(247, 245, 245, 1) 1%, rgba(255, 255, 255, 1) 100%);
 
-  .gradient__text {
-      background: var(--gradient-text);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-  }
+  /* safari 5.1+,chrome 10+ */
+  background:-webkit-radial-gradient(circle at 2% 3%, rgba(247, 245, 245, 1) 1%, rgba(255, 255, 255, 1) 100%);
 
-  .section__padding {
-      padding: 4rem 6rem;
-  }
+  /* opera 11.10+ */
+  background:-o-radial-gradient(circle at 2% 3%, rgba(247, 245, 245, 1) 1%, rgba(255, 255, 255, 1) 100%);
 
-  .section__margin {
-    margin: 4rem 6rem;
+  /* ie 10+ */
+  background:-ms-radial-gradient(circle at 2% 3%, rgba(247, 245, 245, 1) 1%, rgba(255, 255, 255, 1) 100%);
+
+  /* global 92%+ browsers support */
+  background:radial-gradient(circle at 2% 3%, rgba(247, 245, 245, 1) 1%, rgba(255, 255, 255, 1) 100%);
+
+} 
+
+.gradient__text {
+    background: var(--gradient-text);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section__padding {
+    padding: 4rem 6rem;
+}
+
+.section__margin {
+  margin: 4rem 6rem;
 }
 
 scale-up-center {
