@@ -1,23 +1,36 @@
 import React from 'react'
-import {RiMenu3Line, RiCloseLin } from 'react-icons/ri';
-import logo from '../../assets/logo.svg'
+import list from '../../assets/nav/list.png'
+import search from '../../assets/nav/search.png'
+import user from '../../assets/nav/user.png'
 import './navbar.css'
 
 const Navbar = () => {
   return (
-    <div className="gpt3__navbar">
-      <div className="gpt3__navbar-links">
-        <div className='gpt3__navbar-links_logo'>
-          <img src={logo} alt='logo' />
+    <div className="kbpp__navbar">
+      <div className="kbpp__navbar-links">
+        <div className='kbpp__navbar-links_container'>
+          <div className='kbpp__home'>
+            <p><a href='#home'> KB PART PICKER  </a></p>
+          </div>
+        <a href='#makelist'>
+          <div className='kbpp__makelist_img'>
+            <img src={list} alt='Make List'/>
+          </div>
+          <p> MAKE LIST </p>
+        </a>
+        <a href='#features'>
+          <div className='kbpp__search_img'>
+            <img src={search} alt='Search' />
+          </div>
+          <p>  SEARCH </p>
+        </a>
+        <a href='#features'>
+          <div className='kbpp__user_img'>
+            <img src={user} alt='Sign In/Sign Up' />
+            <p> SIGN IN/SIGN UP </p>
+          </div>
+        </a>
         </div>
-        <div className='gpt3__navbar-links_container'>
-          <p> <a href='#home'> Home </a></p>
-          <p> <a href='#features'> Features </a></p>
-        </div>
-      </div>
-      <div className='gpt3__navbar-sign'>
-        <p>Sign in</p>
-        <button type='button'>Sign up</button>
       </div>
     </div>
   )

@@ -1,61 +1,57 @@
-.gpt3__navbar {
+.kbpp__navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
-    padding:  2rem 6rem;
+    padding:  .5rem 3rem 1rem 2rem;
 }
 
-.gpt3__navbar-links {
+.kbpp__navbar-links {
     flex: 1;
     display: flex;
-    justify-content: flex-start;
     align-items: center;
+    transition: .6s ease;
 }
 
-.gpt3__navbar-links_logo {
-    margin-right: 2rem;
+.kbpp__navbar-links p:hover{
+    border-bottom: 2px solid #000;
+    padding: 0;
 }
 
-.gpt3__navbar-links_logo img{
-    width: 62px;
-    height: 16px;
-}
-
-.gpt3__navbar-links_container {
+.kbpp__navbar-links_container {
     display: flex;
-    flex-direction: row;
 }
 
-.gpt3__navbar-sign {
-    display: flex;
+
+.kbpp__navbar-links_container p,
+.kbpp__navbar-menu_container p {
     justify-content: flex-end;
-    align-items: center;
-}
-
-.gpt3__navbar-links_container p,
-.gpt3__navbar-sign p,
-.gpt3__navbar-menu_container p {
     color: #000;
     font-family: var(--font-family);
     font-weight: 500;
-    font-size: 18px;
-    line-height: 25px;
+    font-size: 24px;
+    line-height: 116.19%;
     text-transform: capitalize;
-    margin: 0 1rem;
+    letter-spacing: 0.05em;
+    margin: 2.5rem 2rem 0 3.5rem;
     cursor: pointer;
+    display: inline-block;
 }
 
-.gpt3__navbar-sign button,
-.gpt3__navbar-menu_container button {
-    padding: 0.5rem 1rem;
-    color: #fff;
-    background: #FF4820;
-    font-family: var(--font-family);
-    font-weight: 500;
-    font-size: 18px;
-    border-radius: 5px;
-    border: 0;
-    outline: none;
-    cursor: pointer;
+.kbpp__makelist_img img,
+.kbpp__search_img img,
+.kbpp__user_img img {
+    width: 55px;
+    height: 55px;
+    margin-top: 1.5rem;
+    vertical-align:bottom;
+    display: inline-block;
+    position: fixed;
+}
+
+.kbpp__home p {
+    color: #722C66;
+    font-size: 48px;
+    justify-content: flex-start;
+    margin-top: 1.5rem;
+    box-sizing: border-box;
 }
