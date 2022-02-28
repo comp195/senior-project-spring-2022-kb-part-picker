@@ -63,6 +63,6 @@
 }
 
 .show.active {
-    transform: translateY(100px) scale(0) rotateY(180deg);
+    transform: translateY(100px) scale(0);
     opacity: 0;
 }

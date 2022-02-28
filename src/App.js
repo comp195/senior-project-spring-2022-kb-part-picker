@@ -5,7 +5,7 @@ import { Blog, Features, Footer, Header, Possibility, WhatGPT3 } from './contain
 import './App.css'
 
 const App = () => {
-  const [isShowLogin, setIsShowLogin] = useState(false)
+  const [isShowLogin, setIsShowLogin] = useState(true)
 
   const handleLoginClick = () => {
     setIsShowLogin((isShowLogin) => !isShowLogin)

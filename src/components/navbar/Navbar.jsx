@@ -4,10 +4,10 @@ import search from '../../assets/nav/search.png'
 import user from '../../assets/nav/user.png'
 import './navbar.css'
 
-const Navbar = () => {
-  const handleClick = ({ handleLoginClick }) => {
-    handleLoginClick()
-  }
+const Navbar = ({ handleLoginClick }) => {
+  const handleClick = () => {
+    handleLoginClick();
+  };
   return (
     <div className="kbpp__navbar">
       <div className="kbpp__navbar-links">
