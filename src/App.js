@@ -1,14 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-import { Article, Brand, CTA, Feature, Navbar } from './components';
+import { Article, Brand, CTA, Feature, Navbar, LoginForm } from './components';
 import { Blog, Features, Footer, Header, Possibility, WhatGPT3 } from './containers'
 import './App.css'
 
 const App = () => {
+  const [isShowLogin, setIsShowLogin] = useState(false)
+
+  const handleLoginClick = () => {
+    setIsShowLogin((isShowLogin) => !isShowLogin)
+  }
+
   return (
     <div className='App'>
       <div className="gradient__bg">
-        <Navbar />
+        <Navbar handleLoginClick={handleLoginClick}/>
+        <LoginForm isShowLogin={isShowLogin} />
         <Header />
       </div>
       <Brand />
