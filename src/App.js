@@ -15,11 +15,11 @@ const App = () => {
     <div className='App'>
       <div className="gradient__bg">
         <Navbar handleLoginClick={handleLoginClick}/>
-        <LoginForm isShowLogin={isShowLogin} />
-        <Header />
+        {/* <Header /> */}
       </div>
-      <Brand />
-      <Footer />
+      <LoginForm isShowLogin={isShowLogin} />
+      {/* <Brand />
+      <Footer /> */}
     </div>
   )
 }
