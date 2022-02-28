@@ -4,11 +4,10 @@ import search from '../../assets/nav/search.png'
 import user from '../../assets/nav/user.png'
 import './navbar.css'
 
-const handleClick = ({ handleLoginClick }) => {
-  handleLoginClick()
-}
-
 const Navbar = () => {
+  const handleClick = ({ handleLoginClick }) => {
+    handleLoginClick()
+  }
   return (
     <div className="kbpp__navbar">
       <div className="kbpp__navbar-links">
@@ -34,12 +33,10 @@ const Navbar = () => {
             <p> SIGN IN/SIGN UP </p>
           </div>
         </a> */}
-
-          <div className='kbpp__user_img'>
-            <img src={user} alt='Sign In/Sign Up' />
-            <p onClick={handleClick} className='login-icon'> Sus Amongus </p>
+          <div className='kbpp__user_img' onClick={handleClick}>
+            <img src={user} alt='Sign In/Sign Up' onClick={handleClick} />
+            <p className='login-icon'> SIGN IN </p>
           </div>
-
         </div>
       </div>
     </div>
