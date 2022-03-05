@@ -1,7 +1,43 @@
 import React from 'react'
+import {useState, useEffect} from React
+import {db} from './firebase'
+import {set, ref} from 'firebase/database'
+import {uid} from "uid"
+
 import './loginform.css'
 
 const LoginForm = ({ isShowLogin }) => {
+  const [todo, setTodo] = useState("")
+  const [todos, setTodos] = useState([])
+
+  const handleTodoChange = (e) => {
+    setTodo(e.target.value)
+  }
+  
+  // read
+  useEffect(() => {
+    onValue(ref(db), snapshot => {
+      const data = snapshot.val()
+      if (data != null) {
+        Object.values(data).map(todo => {
+          setTodos(oldArray => [...oldArray, todo])
+        })
+      }
+    })
+  }, [])
+  // write
+  const writeToDatabase = () => {
+    const uuid = uid()
+    set ( ref(db, `/${uuid}`), {
+      todo,
+      uuid,
+
+    })
+    setTodo("")
+  }
+  
+  // update
+  // delete
   return (
     <div className={`${isShowLogin ? "active" : ""} show`}>
       <div className="login-form">
