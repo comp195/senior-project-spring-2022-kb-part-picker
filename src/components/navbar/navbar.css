@@ -1,15 +1,13 @@
 .kbpp__navbar {
     display: flex;
+    padding:  0rem 1rem 1rem 2rem;
     align-items: center;
+    flex-direction: column;
 
-    padding:  .5rem 3rem 1rem 2rem;
 }
 
 .kbpp__navbar-links {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    transition: .6s ease;
+    transition: .3s ease;
 }
 
 .kbpp__navbar-links p:hover{
@@ -24,7 +22,6 @@
 
 .kbpp__navbar-links_container p,
 .kbpp__navbar-menu_container p {
-    justify-content: flex-end;
     color: #000;
     font-family: var(--font-family);
     font-weight: 500;
@@ -35,24 +32,35 @@
     margin: 2.5rem 2rem 0 3.5rem;
     cursor: pointer;
     display: inline-block;
+    align-items: flex-end;
+    flex-direction: column;
+
 }
 
 .kbpp__makelist_img img,
 .kbpp__search_img img,
 .kbpp__user_img img {
-    width: 55px;
-    height: 55px;
-    margin-top: 1.5rem;
+    width: 45px;
+    height: 45px;
+    margin-top: 1.625rem;
     vertical-align:bottom;
     display: inline-block;
     position: fixed;
 }
 
+.kbpp__home {
+    display: flex;
+    flex:1;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .kbpp__home p {
     color: #722C66;
     font-size: 48px;
-    justify-content: flex-start;
+    align-items: flex-start;
     margin-top: 1.5rem;
+    margin-right: 24rem;
     box-sizing: border-box;
 }
 

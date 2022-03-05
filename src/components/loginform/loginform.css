@@ -2,7 +2,8 @@
 .login-form{
 width: 100%;
 display: flex;
-justify-content: center;
+justify-content: flex-end;
+padding-right: 12rem;
 align-items: center;
 font-family: var(--font-family);
 }
@@ -13,7 +14,6 @@ background: black;
 padding-right: 80px;
 padding-left: 80px;
 border-radius: 20px;
-box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
 }
 
 .login-text{
@@ -27,7 +27,7 @@ text-align: center;
 display: flex;
 justify-content: center;
 align-items: center;
-padding-top: 5vh;
+padding-top: 2rem;
 }
 
 label {
