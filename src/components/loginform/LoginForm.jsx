@@ -1,23 +1,19 @@
-import React, {useState, useEffect} from 'react'
-import firebase from './firebase'
-import {db} from '../../firebase'
-import {set, ref, onValue} from 'firebase/database'
-import {uid} from "uid"
-
+import React from 'react'
 import './loginform.css'
 
-const LoginForm = ({ isShowLogin }) => {
-  const [user, setUser] = useState('')
-  const [email, setemail] = useState('')
-  const [password, setpassword] = useState('')
-  const [emailError, setemailError] = useState('')
-  const [passwordError, setpasswordError] = useState('')
-  const [hasAccount, setHasAccount] = useState(false)
-
-  const handleLogin = () => {
-    
-  }
-
+const LoginForm = ( isShowLogin, props ) => {
+  const {
+    email, 
+    password, 
+    hasAccount, 
+    setEmail, 
+    setPassword, 
+    setHasAccount,
+    handleSignin, 
+    handleSignup, 
+    emailError, 
+    passwordError } = props
+  
   return (
     <div className={`${isShowLogin ? "active" : ""} show`}>
       <div className="login-form">
@@ -26,13 +22,44 @@ const LoginForm = ({ isShowLogin }) => {
             <h1 className="login-text">Sign In</h1>
             <label>Username</label>
             <br/>
-            <input type="text" name="username" className="login-box" />
+            <input 
+            type="text" 
+            name="username" 
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-box" 
+            />
+            <p className='errorMessage'>{emailError}</p>
             <br/>
             <label>Password</label>
             <br/>
-            <input type="password" name="password" className="login-box" />
+            <input 
+            type="password" 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password" className="login-box" 
+            />
+            <p className='errorMessage'>{passwordError}</p>
             <br/>
-            <input type="submit" value="LOGIN" className="login-btn" />
+            <div className="login-btn">
+              {hasAccount ?  (
+                <>
+                  <button onClick={handleSignin}>Sign in</button>
+                  <p>or sign up 
+                    <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <button onClick={handleSignup}>Sign up</button> 
+                  <p>or sign in 
+                    <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+                  </p>
+                </>
+              )}
+            </div>
           </form>
         </div>
       </div>
