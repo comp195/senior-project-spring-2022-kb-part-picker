@@ -19,7 +19,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [hasAccount, setHasAccount] = useState(false)
+  const [hasAccount, setHasAccount] = useState(true)
 
   const clearInputs = () => {
     setEmail('')
@@ -81,19 +81,18 @@ const App = () => {
         setUser(user)
       }
       else {
-        setUser('')
+        setUser("")
       }
     })
   }
 
-  useEffect(() => {
-    authListener()
-  }, [])
+  // useEffect(() => {
+  //   authListener()
+  // }, [])
 
   return (
     <div className='App'>
       <Navbar handleLoginClick={handleLoginClick}/>
-      {/* <Header /> */}
       <LoginForm 
         isShowLogin={isShowLogin} 
         email={email}

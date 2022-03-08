@@ -6,8 +6,9 @@ import './navbar.css'
 
 const Navbar = ({ handleLoginClick }) => {
   const handleClick = () => {
-    handleLoginClick();
-  };
+    handleLoginClick()
+  }
+  
   return (
     <div className="kbpp__navbar">
       <div className="kbpp__navbar-links">
