@@ -28,12 +28,6 @@ const Navbar = ({ handleLoginClick }) => {
           </div>
           <p>  SEARCH </p>
         </a>
-        {/* <a href='#features'>
-          <div className='kbpp__user_img'>
-            <img src={user} alt='Sign In/Sign Up' />
-            <p> SIGN IN/SIGN UP </p>
-          </div>
-        </a> */}
           <div className='kbpp__user_img' onClick={handleClick}>
             <img src={user} alt='Sign In/Sign Up' onClick={handleClick} />
             <p className='login-icon'> SIGN IN </p>
