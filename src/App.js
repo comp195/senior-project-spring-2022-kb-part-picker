@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import fire from './firebase'
 
-import { Article, Brand, CTA, Feature, Navbar, LoginForm } from './components';
-import { Blog, Features, Footer, Header, Possibility, WhatGPT3 } from './containers'
+import { TypingTest, Keyboard, Navbar, LoginForm } from './components';
 import './App.css'
 
 const App = () => {
@@ -20,9 +19,8 @@ const App = () => {
         <LoginForm 
           isShowLogin={isShowLogin}  />
 
-
-      {/* <Brand />
-      <Footer /> */}
+      <TypingTest />
+      <Keyboard />
     </div>
   )
 }
