@@ -6,10 +6,10 @@ import './home.css'
 
 const Home = () => {
   return (
-    <>
+    <div>
       <TypingTest />
       <Keyboard />
-    </>
+    </div>
   )
 }
 

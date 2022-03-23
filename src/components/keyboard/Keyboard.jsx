@@ -20,10 +20,6 @@ function App() {
 
   const onKeyPress = button => {
     console.log("Button pressed", button);
-
-    /**
-     * If you want to handle the shift and caps lock buttons
-     */
     if (button === "{shift}" || button === "{lock}") handleShift();
   };
 

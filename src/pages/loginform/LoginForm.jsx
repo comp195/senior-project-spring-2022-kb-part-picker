@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react'
 import fire from '../../firebase'
 import './loginform.css'
 
-const LoginForm = ( {isShowLogin} ) => {
+const LoginForm = () => {
 
   // sign in/sign up handlers
-  const [user, setUser] = useState('')
+  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -23,11 +23,11 @@ const LoginForm = ( {isShowLogin} ) => {
   }
 
   const handleLogin = () => {
+    clearInputs()
     clearErrors()
 
     fire
       .signInWithEmailAndPassword(fire.getAuth(), email, password)
-  
       .catch(error => {
         switch(error.code) {
           case 'auth/invalid-email':
@@ -43,11 +43,11 @@ const LoginForm = ( {isShowLogin} ) => {
   }
 
   const handleSignup = () => {
+    clearInputs()
     clearErrors()
 
     fire
       .createUserWithEmailAndPassword(fire.getAuth(), email, password)
-      .then()
       .catch(error => {
         switch(error.code) {
           case 'auth/email-already-in-use':
@@ -60,25 +60,13 @@ const LoginForm = ( {isShowLogin} ) => {
         }
       })
   }
+  const [user, setUser] = useState('')
 
   const handleLogout = () => {
     fire.auth().signOut()
   }
 
-  // useEffect(() => (
-  //   fire.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       clearInputs()
-  //       setUser(user)
-  //     }
-  //     else {
-  //       setUser("")
-  //     }
-  //   })
-  // ), [])
-
 return (
-
   <div className="login">
     <div className="loginContainer">
       <form>
