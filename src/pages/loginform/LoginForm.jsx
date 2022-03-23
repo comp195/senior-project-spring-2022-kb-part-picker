@@ -76,50 +76,50 @@ const LoginForm = ( {isShowLogin} ) => {
   // ), [])
 
 return (
-  <div className={`${isShowLogin ? "active" : ""} show`}>
-    <div className="login-form">
-      <div className="form-box solid">
-        <form>
-          <h1 className="login-text">Sign In</h1>
-          <label>Username</label>
-            <input 
-              type="text" 
-              name="username" 
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="login-box" 
-            />
-            <p className='errorMessage'>{emailError}</p>
-          <label>Password</label>
-            <input 
-              type="password" 
-              required 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              name="password" 
-              className="login-box" 
-            />
-            <p className='errorMessage'>{passwordError}</p>
-          {hasAccount ?  (
-            <>
-              <button onClick={handleLogin}>Sign in</button>
-              <p className = 'signInUpToggle'>or sign up
-                <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
-              </p>
-            </>
-          ) : (
-            <>
-              <button onClick={handleSignup}>Sign up</button> 
-              <p className = 'signInUpToggle'>or sign in
-                <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
-              </p>
-            </>
-          )}
-        </form>
-      </div>
+
+  <div className="login-form">
+    <div className="form-box solid">
+      <form>
+        <h1 className="login-text">Sign In</h1>
+        <label>Username</label>
+          <input 
+            type="text" 
+            name="username" 
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-box" 
+          />
+          <p className='errorMessage'>{emailError}</p>
+        <label>Password</label>
+          <input 
+            type="password" 
+            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            name="password" 
+            className="login-box" 
+          />
+          <p className='errorMessage'>{passwordError}</p>
+        {hasAccount ?  (
+          <>
+            <button onClick={handleLogin}>Sign in</button>
+            <p className = 'signInUpToggle'>or sign up
+              <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+            </p>
+          </>
+        ) : (
+          <>
+            <button onClick={handleSignup}>Sign up</button> 
+            <p className = 'signInUpToggle'>or sign in
+              <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+            </p>
+          </>
+        )}
+      </form>
     </div>
   </div>
+
   )
 }
 
