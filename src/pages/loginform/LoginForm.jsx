@@ -22,11 +22,12 @@ const LoginForm = ( {isShowLogin} ) => {
     setPasswordError('')
   }
 
-  async function handleLogin() {
+  const handleLogin = () => {
     clearErrors()
 
     fire
       .signInWithEmailAndPassword(fire.getAuth(), email, password)
+  
       .catch(error => {
         switch(error.code) {
           case 'auth/invalid-email':
@@ -41,11 +42,12 @@ const LoginForm = ( {isShowLogin} ) => {
       })
   }
 
-  async function handleSignup() {
+  const handleSignup = () => {
     clearErrors()
 
     fire
       .createUserWithEmailAndPassword(fire.getAuth(), email, password)
+      .then()
       .catch(error => {
         switch(error.code) {
           case 'auth/email-already-in-use':
@@ -77,10 +79,9 @@ const LoginForm = ( {isShowLogin} ) => {
 
 return (
 
-  <div className="login-form">
-    <div className="form-box solid">
+  <div className="login">
+    <div className="loginContainer">
       <form>
-        <h1 className="login-text">Sign In</h1>
         <label>Username</label>
           <input 
             type="text" 
@@ -101,21 +102,23 @@ return (
             className="login-box" 
           />
           <p className='errorMessage'>{passwordError}</p>
-        {hasAccount ?  (
-          <>
-            <button onClick={handleLogin}>Sign in</button>
-            <p className = 'signInUpToggle'>or sign up
-              <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
-            </p>
-          </>
-        ) : (
-          <>
-            <button onClick={handleSignup}>Sign up</button> 
-            <p className = 'signInUpToggle'>or sign in
-              <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
-            </p>
-          </>
-        )}
+        <div className="btnContainer">
+          {hasAccount ?  (
+            <>
+              <button onClick={handleLogin}>Sign in</button>
+              <p className = 'signInUpToggle'>or sign up
+                <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+              </p>
+            </>
+          ) : (
+            <>
+              <button onClick={handleSignup}>Sign up</button> 
+              <p className = 'signInUpToggle'>or sign in
+                <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
+              </p>
+            </>
+          )}
+        </div>
       </form>
     </div>
   </div>
