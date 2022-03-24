@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import fire from './firebase'
+import React from 'react';
 
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { Navbar } from './components'
