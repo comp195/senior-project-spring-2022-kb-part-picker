@@ -1,13 +1,15 @@
-import React, {useState} from 'react'
-
+import React, {useState, useEffect} from 'react'
 import { NavLink } from "react-router-dom";
+import { useAuth } from '../../firebase'
+
 import list from '../../assets/nav/list.png'
 import search from '../../assets/nav/search.png'
 import user from '../../assets/nav/user.png'
 import './navbar.css'
 
 const Navbar = () => {
-  const [accountName, hasAccountName] = useState('SIGN IN/SIGN UP')
+  const accountName = useAuth()
+  
   return (
     <div className="navbar">
         <div className='navbar-links_container'>
@@ -30,7 +32,17 @@ const Navbar = () => {
         <NavLink to ='/login-form'>
           <div className='user_img'>
             <img src={user} alt='Sign In/Sign Up' />
-            <p className='login-icon'> {accountName} </p>
+            <p className='login-icon'> 
+            {accountName ? (
+              <>
+                {accountName.email.toUpperCase()}
+              </>
+            ) : (
+              <>
+                SIGN IN/SIGN UP
+              </>
+            )} 
+            </p>
           </div>
         </NavLink>
         </div>
