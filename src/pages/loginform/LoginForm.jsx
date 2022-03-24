@@ -41,6 +41,7 @@ const LoginForm = () => {
     {accountName ? (
     <div className="login">
       <div className="loginContainer">
+      <label>Logged in: {accountName.email}</label>
         <div className="btnContainer">
           <button onClick={handleLogout}>Log out</button>
         </div>

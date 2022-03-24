@@ -35,7 +35,7 @@ const Navbar = () => {
             <p className='login-icon'> 
             {accountName ? (
               <>
-                {accountName.email.toUpperCase()}
+                {accountName.email.split('@')[0].toUpperCase()}
               </>
             ) : (
               <>
