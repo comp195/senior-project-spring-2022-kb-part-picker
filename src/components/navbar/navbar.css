@@ -43,9 +43,9 @@ a {
 .user_img img {
     width: 45px;
     height: 45px;
-    vertical-align:bottom;
-    float: left;
     flex: 0 0 0;
+    vertical-align: bottom;
+    display: inline-block;
 }
 
 .home {

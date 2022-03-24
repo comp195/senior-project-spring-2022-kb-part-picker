@@ -1,95 +1,65 @@
-import React, {useState, useEffect} from 'react'
-import fire from '../../firebase'
+import React, {useState, useRef} from 'react'
+import { signup, login, logout, useAuth } from "../../firebase";
 import './loginform.css'
 
 const LoginForm = () => {
 
-  // sign in/sign up handlers
+    // sign in/sign up handlers
+    const [hasAccount, setHasAccount] = useState(false)
+    const [ loading, setLoading ] = useState(false);
+    const currentUser = useAuth();
   
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [emailError, setEmailError] = useState('')
-  const [passwordError, setPasswordError] = useState('')
-  const [hasAccount, setHasAccount] = useState(true)
+    const emailRef = useRef();
+    const passwordRef = useRef();
+  
+    async function handleSignup() {
+      setLoading(true);
+      // try {
+        await signup(emailRef.current.value, passwordRef.current.value);
+      // } catch {
+        // alert("Error!");
+      // }
+      setLoading(false);
+    }
+  
+    async function handleLogin() {
+      setLoading(true);
+      try {
+        await login(emailRef.current.value, passwordRef.current.value);
+      } catch {
+        alert("Error!");
+      }
+      setLoading(false);
+    }
+  
+    async function handleLogout() {
+      setLoading(true);
+      try {
+        await logout();
+      } catch {
+        alert("Error!");
+      }
+      setLoading(false);
+    }
 
-  const clearInputs = () => {
-    setEmail('')
-    setPassword('')
-  }
-
-  const clearErrors = () => {
-    setEmailError('')
-    setPasswordError('')
-  }
-
-  const handleLogin = () => {
-    clearInputs()
-    clearErrors()
-
-    fire
-      .signInWithEmailAndPassword(fire.getAuth(), email, password)
-      .catch(error => {
-        switch(error.code) {
-          case 'auth/invalid-email':
-          case 'auth/user-disabled':
-          case 'auth/user-not-found':
-            setEmailError(error.message)
-            break
-          case 'auth/wrong-password':
-            setPasswordError(error.message)
-            break
-        }
-      })
-  }
-
-  const handleSignup = () => {
-    clearInputs()
-    clearErrors()
-
-    fire
-      .createUserWithEmailAndPassword(fire.getAuth(), email, password)
-      .catch(error => {
-        switch(error.code) {
-          case 'auth/email-already-in-use':
-          case 'auth/invalid-email':
-            setEmailError(error.message)
-            break
-          case 'auth/weak-password':
-            setPasswordError(error.message)
-            break
-        }
-      })
-  }
-  const [user, setUser] = useState('')
-
-  const handleLogout = () => {
-    fire.auth().signOut()
-  }
-
-return (
-  <div className="login">
-    <div className="loginContainer">
-      <form>
-        <label>Username</label>
+  return (
+    <div className="login">
+      <div className="loginContainer">
+        <label>E-mail</label>
           <input 
-            type="text" 
-            name="username" 
+            name="e-mail" 
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="login-box" 
+            ref={emailRef}
+            placeholder="email"
           />
-          <p className='errorMessage'>{emailError}</p>
         <label>Password</label>
           <input 
             type="password" 
             required 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
             name="password" 
-            className="login-box" 
+            placeholder="password"
           />
-          <p className='errorMessage'>{passwordError}</p>
         <div className="btnContainer">
           {hasAccount ?  (
             <>
@@ -107,10 +77,8 @@ return (
             </>
           )}
         </div>
-      </form>
+      </div>
     </div>
-  </div>
-
   )
 }
 
