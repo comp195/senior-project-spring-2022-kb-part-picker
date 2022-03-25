@@ -1,17 +1,20 @@
 import React, {useState, useEffect} from 'react'
-import fire, {db} from '../../firebase'
+import fire, {db, useAuth} from '../../firebase'
 import {set, ref, onValue} from 'firebase/database'
 import {uid} from "uid"
 
 import './listmaker.scss'
 
 const ListMaker = () => {
+  const [enableList, setEnableList] = useState(false)
   const [lists, setLists] = useState([])
   const [list, setList] = useState("")
   const [housing, setHousing] = useState("")
   const [switches, setSwitches] = useState("")
   const [keycap, setKeycap] = useState("")
   const [pcb, setPCB] = useState("")
+
+  const accountName = useAuth()
 
   const handleListChange = (part, e) => {
     switch(part) {
@@ -78,25 +81,30 @@ const ListMaker = () => {
   return (
     <>
     <div className="list-maker">
-      <input type="text" required className="list-name" placeholder="New List"/>
+      <input type="text" required className="list-name" placeholder="New List" onChange={(e) => this.setList(this.e.value)} />
       <div className="dropdown-container">
-        <select name="Keycaps" id="keycaps">
+        <select name="Keycaps" id="keycaps" value={this.state.value} onChange={(e) => this.setKeycap(this.e.value)} >
           <option value="default">--keycaps--</option>
           <option value="abs">ABS</option>
         </select>
-        <select name="Case" id="case" onSelect={handleListChange('case', this)}>
+        <select name="Case" id="case" onChange={(e) => this.setHousing(this.e.value)} value={this.state.value}>
           <option value="default">-case--</option>
           <option value="Aluminum">Aluminum</option>
         </select>
-        <select name="Switch" id="switch">
+        <select name="Switch" id="switch" onChange={(e) => this.setSwitches(this.e.value)} value={this.state.value}>
           <option value="default">--switch--</option>
           <option value="MX Blue">MX Blue</option>
         </select>
-        <select name="PCB" id="pcb">
+        <select name="PCB" id="pcb" onChange={(e) => this.setPCB(this.e.value)} value={this.state.value}>
           <option value="default">--pcb--</option>
           <option value="65%">65%</option>
         </select>
-        <button onClick={writeToDatabase}>Make List</button>
+        {accountName ? (
+          <button  onClick={writeToDatabase}>Make List</button>
+        ) : (
+          <button disabled onClick={writeToDatabase}>Make List</button>
+        )}
+        
       </div>
     </div>
     </>
