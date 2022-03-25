@@ -6,11 +6,26 @@ import {uid} from "uid"
 import './listmaker.css'
 
 const ListMaker = () => {
-  const [todo, setTodo] = useState("")
-  const [todos, setTodos] = useState([])
+  const [lists, setLists] = useState([])
+  const [list, setList] = useState("")
+  const [housing, setHousing] = useState("")
+  const [switches, setSwitches] = useState("")
+  const [keycap, setKeycap] = useState("")
+  const [pcb, setPCB] = useState("")
 
-  const handleTodoChange = (e) => {
-    setTodo(e.target.value)
+  const handleListChange = (part, e) => {
+    switch(part) {
+      case 'name':
+        setList(e.target.value)
+      case 'housing':
+        setHousing(e.target.value)
+      case 'switches':
+        setSwitches(e.target.value)
+      case 'keycap':
+        setKeycap(e.target.value)
+      case 'pcb':
+        setPCB(e.target.value)
+    }
   }
   
   // read
@@ -18,8 +33,8 @@ const ListMaker = () => {
     onValue(ref(db), snapshot => {
       const data = snapshot.val()
       if (data != null) {
-        Object.values(data).map(todo => {
-          setTodos(oldArray => [...oldArray, todo])
+        Object.values(data).map(lists => {
+          setLists(oldArray => [...oldArray, todo])
         })
       }
     })
@@ -37,7 +52,11 @@ const ListMaker = () => {
   
   // update
   // delete
-  return 
+  return (
+    <>
+    
+    </>
+  )
 }
 
 export default ListMaker 
