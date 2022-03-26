@@ -66,7 +66,7 @@ const ListMaker = () => {
   // write
   const writeToDatabase = () => {
     const list_id = uid()
-    set ( ref(db, `/${list_id}`), {
+    set (ref(db, `/${list_id}`), {
       list_id,
       list,
       housing,
@@ -81,21 +81,21 @@ const ListMaker = () => {
   return (
     <>
     <div className="list-maker">
-      <input type="text" required className="list-name" placeholder="New List" onChange={(e) => this.setList(this.e.value)} />
+      <input type="text" required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
       <div className="dropdown-container">
-        <select name="Keycaps" id="keycaps" value={this.state.value} onChange={(e) => this.setKeycap(this.e.value)} >
+        <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
           <option value="abs">ABS</option>
         </select>
-        <select name="Case" id="case" onChange={(e) => this.setHousing(this.e.value)} value={this.state.value}>
+        <select name="Case" id="case" value={housing} onChange={(e) => setHousing(e.target.value)} >
           <option value="default">-case--</option>
           <option value="Aluminum">Aluminum</option>
         </select>
-        <select name="Switch" id="switch" onChange={(e) => this.setSwitches(this.e.value)} value={this.state.value}>
+        <select name="Switch" id="switch" value={switches} onChange={(e) => setSwitches(e.target.value)}>
           <option value="default">--switch--</option>
           <option value="MX Blue">MX Blue</option>
         </select>
-        <select name="PCB" id="pcb" onChange={(e) => this.setPCB(this.e.value)} value={this.state.value}>
+        <select name="PCB" id="pcb" value={pcb} onChange={(e) => setPCB(e.target.value)}>
           <option value="default">--pcb--</option>
           <option value="65%">65%</option>
         </select>
