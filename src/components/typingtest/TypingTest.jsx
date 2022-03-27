@@ -1,10 +1,11 @@
 import React from 'react'
+import { TypingTest } from 'react-typing-test';
 import './typingtest.css'
 
-const TypingTest = () => {
+const TypeTest = () => {
   return (
-    <div>TypingTest</div>
+    <TypingTest language='english' wordLimit={120} />
   )
 }
 
-export default TypingTest
+export default TypeTest

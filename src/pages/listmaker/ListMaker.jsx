@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import fire, {db, useAuth} from '../../firebase'
+import {db, useAuth} from '../../firebase'
 import {set, ref, onValue} from 'firebase/database'
 import {uid} from "uid"
 
 import './listmaker.scss'
 
 const ListMaker = () => {
-  const [enableList, setEnableList] = useState(false)
   const [lists, setLists] = useState([])
   const [list, setList] = useState("")
   const [housing, setHousing] = useState("")
@@ -15,42 +14,23 @@ const ListMaker = () => {
   const [pcb, setPCB] = useState("")
 
   const accountName = useAuth()
-
-  const handleListChange = (part, e) => {
-    switch(part) {
-      case 'name':
-        setList(e.target.value)
-        break
-      case 'housing':
-        setHousing(e.target.value)
-        break
-      case 'switches':
-        setSwitches(e.target.value)
-        break
-      case 'keycap':
-        setKeycap(e.target.value)
-        break
-      case 'pcb':
-        setPCB(e.target.value)
-        break
-      case 'default':
-        break
-    }
-  }
   
-  // read
-  async function getListFromDatabase() {
-    return fire.database().ref('lists/keycaps').once('value').then(function(snapshot) {
-        var items = [];
-        snapshot.forEach(function(childSnapshot) {
-          var childKey = childSnapshot.key;
-          var childData = childSnapshot.val();
-          items.push(childData);
-        }); 
-        console.log("items: " + items);
-        return items;
-    })
+  const handleDisabledButton = () => {
+    return 0
   }
+  // read
+  // async function getListFromDatabase() {
+  //   return fire.database().ref('lists/keycaps').once('value').then(function(snapshot) {
+  //       var items = [];
+  //       snapshot.forEach(function(childSnapshot) {
+  //         var childKey = childSnapshot.key;
+  //         var childData = childSnapshot.val();
+  //         items.push(childData);
+  //       }); 
+  //       console.log("items: " + items);
+  //       return items;
+  //   })
+  // }
 
   useEffect(() => {
     onValue(ref(db), snapshot => {
@@ -81,7 +61,7 @@ const ListMaker = () => {
   return (
     <>
     <div className="list-maker">
-      <input type="text" required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
+      <input type="text" name='listname' required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
       <div className="dropdown-container">
         <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
@@ -100,9 +80,9 @@ const ListMaker = () => {
           <option value="65%">65%</option>
         </select>
         {accountName ? (
-          <button  onClick={writeToDatabase}>Make List</button>
+          <button onClick={writeToDatabase}>Make List</button>
         ) : (
-          <button disabled onClick={writeToDatabase}>Make List</button>
+          <button disabled className='disabled' onClick={handleDisabledButton}>Make List</button>
         )}
         
       </div>
