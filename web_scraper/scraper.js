@@ -10,6 +10,7 @@ async function scrapeProduct(url) {
     const srcTxt = src.jsonValue()
 
     console.log({srcTxt})
+    browser.close()
 }
 
 scrapeProduct('https://novelkeys.com/collections/keyboards')
