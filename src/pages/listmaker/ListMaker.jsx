@@ -19,18 +19,18 @@ const ListMaker = () => {
     return 0
   }
   // read
-  // async function getListFromDatabase() {
-  //   return fire.database().ref('lists/keycaps').once('value').then(function(snapshot) {
-  //       var items = [];
-  //       snapshot.forEach(function(childSnapshot) {
-  //         var childKey = childSnapshot.key;
-  //         var childData = childSnapshot.val();
-  //         items.push(childData);
-  //       }); 
-  //       console.log("items: " + items);
-  //       return items;
-  //   })
-  // }
+  async function getListFromDatabase() {
+    return fire.database().ref('lists/keycaps').once('value').then(function(snapshot) {
+        var items = [];
+        snapshot.forEach(function(childSnapshot) {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          items.push(childData);
+        }); 
+        console.log("items: " + items);
+        return items;
+    })
+  }
 
   useEffect(() => {
     onValue(ref(db), snapshot => {
