@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react'
 import { signup, login, logout, useAuth } from "../../firebase";
 
-import './loginform.css'
+import './loginform.scss'
 
 const LoginForm = () => {
 
@@ -69,14 +69,14 @@ const LoginForm = () => {
           <div className="btnContainer">
             {hasAccount ?  (
               <>
-                <button onClick={handleLogin}>Sign in</button>
+                <button className='lf-button' onClick={handleLogin}>Sign in</button>
                 <p className = 'signInUpToggle'>or sign up
                   <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
                 </p>
               </>
             ) : (
               <>
-                <button onClick={handleSignup}>Sign up</button> 
+                <button className='lf-button' onClick={handleSignup}>Sign up</button> 
                 <p className = 'signInUpToggle'>or sign in
                   <span onClick={() => setHasAccount(!hasAccount)}>here!</span>
                 </p>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {db, useAuth} from '../../firebase'
+import fire, {db, useAuth} from '../../firebase'
 import {set, ref, onValue} from 'firebase/database'
 import {uid} from "uid"
 
