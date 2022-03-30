@@ -7,37 +7,48 @@ async function scrapeProduct(links) {
         await page.goto(links[i])
 
         const hrefs = await page.$$eval('a', as => as.map(a => a.href))
-        getSwitchInfo(hrefs)
+        getInfo(hrefs)
     }
     
     browser.close()
+    console.log({switches})
+    console.log({cases})
 }
 
-async function getSwitchInfo(hrefs) {
+async function getInfo(hrefs) {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    const productNames = []
+    const xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div/h1'
+
     for (let i = 0; i < hrefs.length; i++) {
-        if(hrefs[i].includes('/products/')){ 
-            const xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div/h1'
-            const cur = hrefs[i]
-            console.log({cur})  
-            await page.goto(cur, {timeout: 0, waitUntil: 'networkidle0'})
-            await page.waitForXPath(xp);
-            const [e] = await page.$x(xp)
-            if (e) {
-                const e_parse = await e.getProperty('textContent')
-                const productName = await e_parse.jsonValue()
-                console.log({productName})
-                if (productName.includes('Switch') && !productName.includes('Film')) {
-                    productNames.push(productName)
-                }
-            }
+        const cur = hrefs[i]
+
+        if(!cur.includes('/product')) continue 
+
+        await page.goto(cur, {timeout: 0, waitUntil: 'networkidle0'})
+        
+        console.log({cur})
+        await page.waitForXPath(xp);
+        const [e] = await page.$x(xp)
+        if (!e) continue
+
+        const e_parse = await e.getProperty('textContent')
+        const productName = await e_parse.jsonValue()
+        console.log({productName})
+        if(cur.includes('/switches') && (productName.includes('Switch') && !productName.includes('Film'))){ 
+            switches.push(productName)
+        }
+        else if(cur.includes('/keyboard')) {
+            cases.push(productName)
         }
     }
-    console.log({productNames})
+
     browser.close()
 }
 
-const urls = ['https://novelkeys.com/collections/switches', 'https://cannonkeys.com/collections/switches/']
+
+const urls = ['https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
+const switches = []
+const cases = []
+
 scrapeProduct(urls)
