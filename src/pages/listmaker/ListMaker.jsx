@@ -6,7 +6,6 @@ import {uid} from "uid"
 import './listmaker.scss'
 
 const ListMaker = () => {
-  const [lists, setLists] = useState([])
   const [list, setList] = useState("")
   const [housing, setHousing] = useState("")
   const [switches, setSwitches] = useState("")
@@ -32,22 +31,12 @@ const ListMaker = () => {
     })
   }
 
-  useEffect(() => {
-    onValue(ref(db), snapshot => {
-      const data = snapshot.val()
-      if (data != null) {
-        Object.values(data).map(lists => {
-          setLists(oldArray => [...oldArray, list])
-        })
-      }
-    })
-  }, [])
-
   // write
   const writeToDatabase = () => {
     const list_id = uid()
-    set (ref(db, `/${list_id}`), {
-      list_id,
+    const current_uid = accountName.uid
+    set (ref(db, `PartList/${list_id}`), {
+      current_uid,
       list,
       housing,
       switches,
@@ -62,7 +51,7 @@ const ListMaker = () => {
     <>
     <div className="list-maker">
       <input type="text" name='listname' required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
-      <div className="dropdown-container">
+      <div className="slide">
         <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
           <option value="abs">ABS</option>
