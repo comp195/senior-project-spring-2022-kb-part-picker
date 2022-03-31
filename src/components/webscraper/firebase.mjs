@@ -24,31 +24,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const fire = initializeApp(firebaseConfig);
 export const db = getDatabase(fire);
-
-const authentification = getAuth();
-
-export function signup(email, password) {
-  return createUserWithEmailAndPassword(authentification, email, password);
-}
-
-export function login(email, password) {
-  return signInWithEmailAndPassword(authentification, email, password);
-}
-
-export function logout() {
-  return signOut(authentification);
-}
-
-// Custom Hook
-export function useAuth() {
-  const [ currentUser, setCurrentUser ] = useState();
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(authentification, user => setCurrentUser(user));
-    return unsub;
-  }, [])
-
-  return currentUser;
-}
-
 export default fire

@@ -4,36 +4,69 @@ import { signup, login, logout, useAuth } from "../../firebase";
 import './loginform.scss'
 
 const LoginForm = () => {
-
-  // sign in/sign up handlers
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [hasAccount, setHasAccount] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
   const accountName = useAuth()
 
-  const emailRef = useRef();
-  const passwordRef = useRef();
+  const emailRef = useRef()
+  const passwordRef = useRef()
 
+  const clearInputs = () => {
+    emailRef.current = ''
+    passwordRef.current = ''
+  }
+
+  const clearErrors = () => {
+    setEmailError('')
+    setPasswordError('')
+  }
 
   async function handleSignup() {
-    // try {
-      await signup(emailRef.current.value, passwordRef.current.value);
-    // } catch {
-      // alert("Error!");
-    // }
+    clearErrors()
+    
+    try {
+      await signup(email, password)
+    } catch(e) {
+      switch (e.code) {
+        case 'auth/invalid-email':
+        case 'auth/email-already-in-use':
+          setEmailError(e.message)
+          break
+        case 'auth/weak-password':
+          setPasswordError(e.message)
+          break
+      }
+    }
+    clearInputs()
   }
 
   async function handleLogin() {
+    clearErrors()
     try {
-      await login(emailRef.current.value, passwordRef.current.value);
-    } catch {
-      alert("Error!");
+      await login(email, password)
+    } catch(e) {
+      switch (e.code) {
+        case 'auth/invalid-email':
+        case 'auth/user-disabled':
+        case 'auth/user-not-found':
+          setEmailError(e.message)
+          break
+        case 'auth/wrong-password':
+          setPasswordError(e.message)
+          break
+      }
     }
+    clearInputs()
   }
   
   async function handleLogout() {
     try {
       await logout();
-    } catch {
-      alert("Error!");
+    } catch(e) {
+      alert("Error logging out!");
     }
   }
 
@@ -54,18 +87,22 @@ const LoginForm = () => {
           <label>E-mail</label>
             <input 
               name="e-mail" 
+              autoFocus
               required
-              ref={emailRef}
+              value={email}
               placeholder="email"
+              onChange={(e) => setEmail(e.target.value)}
             />
+          <p className='errorMsg'>{emailError}</p>
           <label>Password</label>
             <input 
+              name="password" 
               type="password" 
               required 
-              ref={passwordRef}
-              name="password" 
               placeholder="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
+            <p className='errorMsg'>{passwordError}</p>
           <div className="btnContainer">
             {hasAccount ?  (
               <>
