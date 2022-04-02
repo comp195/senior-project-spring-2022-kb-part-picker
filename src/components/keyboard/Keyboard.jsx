@@ -1,52 +1,60 @@
-import React, { useRef, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from "react";
 import Keyboard from "react-simple-keyboard";
-import "react-simple-keyboard/build/css/index.css";
+import { Howl } from 'howler';
 
-function App() {
-  const [input, setInput] = useState("");
-  const [layout, setLayout] = useState("default");
-  const keyboard = useRef();
+import './keyboard.css'
 
-  const onChange = input => {
-    setInput(input);
+class App extends Component {
+  state = {
+    layoutName: "default",
+    input: ""
+  };
+
+  onChange = input => {
+    this.setState({ input });
     console.log("Input changed", input);
   };
 
-  const handleShift = () => {
-    const newLayoutName = layout === "default" ? "shift" : "default";
-    setLayout(newLayoutName);
-  };
-
-  const onKeyPress = button => {
+  onKeyPress = button => {
     console.log("Button pressed", button);
-    if (button === "{shift}" || button === "{lock}") handleShift();
+
+    /**
+     * If you want to handle the shift and caps lock buttons
+     */
+    if (button === "{shift}" || button === "{lock}") this.handleShift();
   };
 
-  const onChangeInput = event => {
+  handleShift = () => {
+    const layoutName = this.state.layoutName;
+
+    this.setState({
+      layoutName: layoutName === "default" ? "shift" : "default"
+    });
+  };
+
+  onChangeInput = event => {
     const input = event.target.value;
-    setInput(input);
-    keyboard.current.setInput(input);
+    this.setState({ input });
+    this.keyboard.setInput(input);
   };
 
-  return (
-    <div className="App">
-      <input
-        value={input}
-        placeholder={"Tap on the virtual keyboard to start"}
-        onChange={onChangeInput}
-      />
-      <Keyboard
-        keyboardRef={r => (keyboard.current = r)}
-        layoutName={layout}
-        onChange={onChange}
-        onKeyPress={onKeyPress}
-      />
-    </div>
-  );
+  render() {
+    return (
+      <div>
+        <input
+          value={this.state.input}
+          placeholder={"Tap on the virtual keyboard to start"}
+          onChange={this.onChangeInput}
+        />
+        <Keyboard
+          keyboardRef={r => (this.keyboard = r)}
+          layoutName={this.state.layoutName}
+          onChange={this.onChange}
+          onKeyPress={this.onKeyPress}
+        />
+      </div>
+    );
+  }
 }
-
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
 
 export default Keyboard

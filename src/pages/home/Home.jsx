@@ -13,7 +13,8 @@ const Home = () => {
   return (
     <div>
       <TypeTest />
-      <Keyboard />
+      <Keyboard 
+      physicalKeyboardHighlight={true}/>
       <div className="dropdown-container">
         <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
