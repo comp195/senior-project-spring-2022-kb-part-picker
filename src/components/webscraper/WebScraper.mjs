@@ -1,11 +1,10 @@
-import {fire, db, keycaps_ref, switches_ref, housing_ref} from './firebase.mjs'
+import {fire, db} from './firebase.mjs'
 import {set, ref} from 'firebase/database'
 import {uid} from "uid"
 import puppeteer from 'puppeteer'
 
 const WebScraper = () => {
     const urls = ['https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
-
     
     const keycaps = []
     const switches = []
@@ -84,8 +83,8 @@ const WebScraper = () => {
                 var size = 'Unknown'
 
                 // check product name first before running another xpath check
-                const sizes = ['60', '65', '75', 'TKL']
-                var size_check = sizes.find(sc => (sc === product_name))
+                const sizes = ['60', '65', '75', '87', 'TKL']
+                var size_check = sizes.find(sc => product_name.includes(sc))
                 if (size_check) {
                     size = size_check
                 }
@@ -109,9 +108,9 @@ const WebScraper = () => {
                         const size_parse = await s.getProperty('textContent')
                         possible_size = await size_parse.jsonValue()
                     }
-                    size_check = sizes.find(sc => (sc === product_name))
+                    size_check = sizes.find(sc => product_name.includes(sc))
                     if (size_check) {
-                        size = size_check
+                        size = possible_size
                     }
                 }
                 
