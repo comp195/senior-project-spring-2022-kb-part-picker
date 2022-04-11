@@ -1,14 +1,11 @@
-import {fire, db} from './firebase.mjs'
+import {fire, db, keycaps_ref, switches_ref, housing_ref} from './firebase.mjs'
 import {set, ref} from 'firebase/database'
 import {uid} from "uid"
 import puppeteer from 'puppeteer'
 
 const WebScraper = () => {
     const urls = ['https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
-    
-    const keycaps_ref = fire.database().ref("/Keycaps")
-    const switches_ref = fire.database().ref("/Switches")
-    const housing_ref = fire.database().ref("/Housing")
+
     
     const keycaps = []
     const switches = []
@@ -38,7 +35,7 @@ const WebScraper = () => {
         // TODO: possible refactor, search for a unifying xpath
         const p_img_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[1]/div[1]/div/button/img'
         const p_img_ck_xp = '/html/body/div[4]/main/div/div[1]/div/div[1]/div[1]/div/a/img'
-        const p_img_xp = ''
+        var p_img_xp = ''
 
         for (let i = 0; i < hrefs.length; i++) {
             const link = hrefs[i]
@@ -68,7 +65,7 @@ const WebScraper = () => {
             }
             
             await page.waitForXPath(p_img_xp);
-            const img_url = 'Unknown'
+            var img_url = 'Unknown'
             if (e) {
                 const [img] = await page.$x(p_img_xp)
                 const img_parse = await img.getProperty('src')
@@ -84,11 +81,11 @@ const WebScraper = () => {
                 })
             }
             else if(link.includes('/keyboard')) {
-                const size = 'Unknown'
+                var size = 'Unknown'
 
                 // check product name first before running another xpath check
                 const sizes = ['60', '65', '75', 'TKL']
-                const size_check = sizes.find(sc => (product_name === sc))
+                var size_check = sizes.find(sc => (sc === product_name))
                 if (size_check) {
                     size = size_check
                 }
@@ -96,7 +93,7 @@ const WebScraper = () => {
                     // TODO: other possible xpath refactor
                     const size_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/ul[1]/li[1]'
                     const size_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[8]/div/ul/li[1]/text()'
-                    const size_xp = ''
+                    var size_xp = ''
                 
                     if (link.includes('cannonkeys')) {
                         size_xp = size_ck_xp
@@ -107,12 +104,12 @@ const WebScraper = () => {
 
                     await page.waitForXPath(size_xp)
                     const [s] = await page.$x(size_xp)
-                    const possible_size = ''
+                    var possible_size = ''
                     if (s) {
                         const size_parse = await s.getProperty('textContent')
                         possible_size = await size_parse.jsonValue()
                     }
-                    size_check = sizes.find(sc => (product_name === sc))
+                    size_check = sizes.find(sc => (sc === product_name))
                     if (size_check) {
                         size = size_check
                     }
@@ -130,8 +127,8 @@ const WebScraper = () => {
                 // get keycap material (abs, pbt)
                 const mat_ck_xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div[2]/div[1]/table/tbody/tr[2]/td[2]/text()'
                 const mat_nk_xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div/div[7]/div/ul/li[1]/text()'
-                const mat_xp = ''
-                const material = ''
+                var mat_xp = ''
+                var material = ''
                 if (link.includes('cannonkeys')) {
                     mat_xp = mat_ck_xp
                 }
