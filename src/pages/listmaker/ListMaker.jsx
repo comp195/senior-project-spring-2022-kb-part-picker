@@ -19,7 +19,7 @@ const ListMaker = () => {
   }
   // read
   async function getListFromDatabase() {
-    return fire.database().ref('lists/keycaps').once('value').then(function(snapshot) {
+    return fire.database().ref('keycaps').once('value').then(function(snapshot) {
         var items = [];
         snapshot.forEach(function(childSnapshot) {
           var childKey = childSnapshot.key;
@@ -37,7 +37,7 @@ const ListMaker = () => {
     const current_uid = accountName.uid
     set (ref(db, `PartList/${list_id}`), {
       current_uid,
-      list,
+      list_name: list,
       housing,
       switches,
       keycap,

@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase } from "firebase/database"
+import { getDatabase, ref, onValue, onDisconnect } from "firebase/database"
 
 import { useEffect, useState } from "react";
 
@@ -23,5 +23,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const fire = initializeApp(firebaseConfig);
-export const db = getDatabase(fire);
+export const db = getDatabase();
+const connectedRef = ref(db, ".info/connected");
+onValue(connectedRef, (snap) => {
+  if (snap.val() === true) {
+    console.log("connected");
+  } else {
+    console.log("not connected");
+  }
+});
+
 export default fire

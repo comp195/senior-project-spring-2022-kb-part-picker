@@ -3,6 +3,11 @@ import Keyboard from "react-simple-keyboard";
 import { Howl } from 'howler';
 
 import './keyboard.css'
+const sfx = {
+  push: new Howl ( {
+    src: 'test'
+  })
+}
 
 class App extends Component {
   state = {
@@ -11,8 +16,8 @@ class App extends Component {
   };
 
   onChange = input => {
-    this.setState({ input });
-    console.log("Input changed", input);
+    this.setState({ input })
+    console.log("Input changed", input)
   };
 
   onKeyPress = button => {
@@ -21,7 +26,9 @@ class App extends Component {
     /**
      * If you want to handle the shift and caps lock buttons
      */
-    if (button === "{shift}" || button === "{lock}") this.handleShift();
+    if (button === "{shift}" || button === "{lock}") this.handleShift()
+    else if (button === "{space}") this.handleSpace()
+    else sfx.push.play()
   };
 
   handleShift = () => {
@@ -31,6 +38,10 @@ class App extends Component {
       layoutName: layoutName === "default" ? "shift" : "default"
     });
   };
+
+  handleSpace = () => {
+
+  }
 
   onChangeInput = event => {
     const input = event.target.value;
