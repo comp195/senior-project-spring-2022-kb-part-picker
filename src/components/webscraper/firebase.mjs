@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { firebase, initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, ref, onValue, onDisconnect } from "firebase/database"
 
@@ -22,7 +22,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const fire = initializeApp(firebaseConfig);
+export const fire = initializeApp(firebaseConfig);
 export const db = getDatabase();
 const connectedRef = ref(db, ".info/connected");
 onValue(connectedRef, (snap) => {
@@ -32,5 +32,3 @@ onValue(connectedRef, (snap) => {
     console.log("not connected");
   }
 });
-
-export default fire

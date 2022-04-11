@@ -1,4 +1,4 @@
-import {db} from './firebase.mjs'
+import {fire, db} from './firebase.mjs'
 import {set, ref} from 'firebase/database'
 import {uid} from "uid"
 import puppeteer from 'puppeteer'
@@ -6,9 +6,9 @@ import puppeteer from 'puppeteer'
 const WebScraper = () => {
     const urls = ['https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
     
-    const keycaps_ref = new db.ref("/Keycaps")
-    const switches_ref = new db.ref("/Switches")
-    const housing_ref = new db.ref("/Housing")
+    const keycaps_ref = fire.database().ref("/Keycaps")
+    const switches_ref = fire.database().ref("/Switches")
+    const housing_ref = fire.database().ref("/Housing")
     
     const keycaps = []
     const switches = []
