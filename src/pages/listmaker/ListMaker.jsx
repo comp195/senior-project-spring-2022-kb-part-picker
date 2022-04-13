@@ -50,24 +50,24 @@ const ListMaker = () => {
   return (
     <>
     <div className="list-maker">
-      <input type="text" name='listname' required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
+      <input type="text" name='New List' required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} />
       <div className="slide">
         <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
           <option value="abs">ABS</option>
-        </select>
+        </select> <br/>
         <select name="Case" id="case" value={housing} onChange={(e) => setHousing(e.target.value)} >
           <option value="default">-case--</option>
           <option value="Aluminum">Aluminum</option>
-        </select>
+        </select> <br/>
         <select name="Switch" id="switch" value={switches} onChange={(e) => setSwitches(e.target.value)}>
           <option value="default">--switch--</option>
           <option value="MX Blue">MX Blue</option>
-        </select>
+        </select> <br/>
         <select name="PCB" id="pcb" value={pcb} onChange={(e) => setPCB(e.target.value)}>
           <option value="default">--pcb--</option>
           <option value="65%">65%</option>
-        </select>
+        </select> <br/>
         {accountName ? (
           <button onClick={writeToDatabase}>Make List</button>
         ) : (
