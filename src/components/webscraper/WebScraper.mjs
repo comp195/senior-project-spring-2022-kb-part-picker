@@ -5,11 +5,7 @@ import puppeteer from 'puppeteer'
 import response from 'express'
 
 const WebScraper = () => {
-    const urls = ['https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
-    
-    const keycaps = []
-    const switches = []
-    const cases = []
+    const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
 
     async function scrapeProduct(links) {
         const browser = await puppeteer.launch()
@@ -23,8 +19,6 @@ const WebScraper = () => {
         }
         
         browser.close()
-        console.log({switches})
-        console.log({cases})
     }
 
     async function getInfo(hrefs) {
@@ -33,14 +27,17 @@ const WebScraper = () => {
         const p_name_xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div/h1'
         
         // TODO: possible refactor, search for a unifying xpath
+        const price_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[1]/div/dl/div[1]/dd/span'
+        const price_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[3]/dl/div[1]/dd/span'
         const p_img_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[1]/div[1]/div/a/img'
         const p_img_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[1]/div[1]/div/button/img'
         const size_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/ul[1]/li[1]'
         const size_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[8]/div/ul/li[1]/text()'
-        const mat_ck_xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div[2]/div[1]/table/tbody/tr[2]/td[2]/text()'
-        const mat_nk_xp = '//*[@id="ProductSection-product-template"]/div/div[2]/div/div[7]/div/ul/li[1]/text()'
+        const mat_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/p[2]/strong[2]'
+        const mat_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/h2'
                 
         var p_img_xp = ''
+        var price_xp = ''
         var mat_xp = ''
         var size_xp = ''
 
@@ -52,11 +49,13 @@ const WebScraper = () => {
             // set proper xpaths per site
             if (link.includes('cannonkeys')) {
                 p_img_xp = p_img_ck_xp
+                price_xp = price_ck_xp
                 mat_xp = mat_ck_xp
                 size_xp = size_ck_xp
             }
             else if (link.includes('novelkeys')) {
                 p_img_xp = p_img_nk_xp
+                price_xp = price_nk_xp
                 mat_xp = mat_nk_xp
                 size_xp = size_nk_xp
             }
@@ -76,11 +75,25 @@ const WebScraper = () => {
             
             // get product image
             var img_url = await parseJSONFromXP(page, p_img_xp, 'src')
+
+            // get product price
+            var product_price = ""
+            var possible_price = await parseJSONFromXP(page, price_xp, 'textContent')
+            if (!possible_price.includes('Unknown')) {
+                product_price = parseFloat(possible_price.match(/[\d\.\d]+/i))
+                if (!product_price) {
+                    product_price = 'N/A'
+                }
+            }
+            else {
+                product_price = 'Unknown'
+            }
             
-            // save product to db, only if switch, keycap, or housing
+            //save product to db, only if switch, keycap, or housing
             if(link.includes('/switches') && (product_name.includes('Switch') && !product_name.includes('Film'))){ 
                 set (ref(db, `Switches/${product_name}`), {
                     product_name,
+                    product_price,
                     img_url,
                     link
                 })
@@ -104,24 +117,30 @@ const WebScraper = () => {
                 
                 set (ref(db, `Housing/${product_name}`), {
                     product_name,
+                    product_price,
                     img_url,
                     size,
                     link
                 })
             }
-            else if(link.includes('keycaps/')) {
+            if(link.includes('keycaps/')) {
                 // get keycap material (abs, pbt)
                 var material = await parseJSONFromXP(page, mat_xp, 'textContent')
 
-                if (material.toLowerCase.includes('abs')) {
+                if (material.toLowerCase().includes('abs')) {
                     material = 'ABS'
                 }
-                else if (material.toLowerCase.includes('pbt')) {
+                else if (material.toLowerCase().includes('pbt')) {
                     material = 'PBT'
                 }
+                else {
+                    material = 'Unknown'
+                }
+
 
                 set (ref(db, `Keycaps/${product_name}`), {
                     product_name,
+                    product_price,
                     img_url,
                     material,
                     link

@@ -2,6 +2,11 @@ body {
     padding: 0 1rem 1rem 1rem;
 }
 
+.kb-container {
+    margin: auto;
+    width: 50rem
+}
+
 .dropdown-container {
     display: flex;
     justify-content: center;
