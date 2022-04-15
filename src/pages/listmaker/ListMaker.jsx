@@ -38,7 +38,6 @@ const ListMaker = () => {
   });
 
   const makeBasicPartComponent = (category) => {
-    console.log({category})
     var link = '/' + category.toLowerCase()
     return(
       <tr className="list-item">
@@ -162,10 +161,13 @@ const ListMaker = () => {
   return (
     
     <>
-    {dbUpdating ? (<p>Loading...</p>):(
+    
       <div className="list-maker">
+      {dbUpdating ? (<p>Loading...</p>):(
+
+        <>
         {/* <input type="text" name='New List' required className="list-name" placeholder="New List" onChange={(e) => setList(e.target.value)} /> */}
-        <select name="Lists" id="lists" value={curList} onChange={(e) => handleChangeList(e)} >
+        <select className='list-select' name="Lists" id="lists" value={curList} onChange={(e) => handleChangeList(e)} >
           <option key='default' className='default' value="default">user lists</option>
           {dbUpdating ? (<></>): (
               lists.map((l,i) => (
@@ -180,30 +182,16 @@ const ListMaker = () => {
           {switches}
           {pcb}
         </tbody>
-        {/* <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
-          <option className='default' value="default">keycaps</option>
-          <option value="abs">ABS</option>
-        </select> <br/>
-        <select name="Case" id="case" value={housing} onChange={(e) => setHousing(e.target.value)} >
-          <option className='default' value="default">case</option>
-          <option value="Aluminum">Aluminum</option>
-        </select> <br/>
-        <select name="Switch" id="switch" value={switches} onChange={(e) => setSwitches(e.target.value)}>
-          <option className='default'value="default">switch</option>
-          <option value="MX Blue">MX Blue</option>
-        </select> <br/>
-        <select name="PCB" id="pcb" value={pcb} onChange={(e) => setPCB(e.target.value)}>
-          <option className='default'value="default">pcb</option>
-          <option value="65%">65%</option>
-        </select> <br/> */}
         {accountName ? (
           <button onClick={writeToDatabase}>Make List</button>
         ) : (
           <button disabled className='disabled' onClick={handleNothing}>Make List</button>
         )}
-        
+        </>
+      )
+      }
     </div>
-    )}
+   
     
   </>
   )

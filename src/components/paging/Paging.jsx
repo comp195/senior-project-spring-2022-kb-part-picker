@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import { NavLink } from "react-router-dom";
 import { db } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 
@@ -7,11 +8,9 @@ import "./paging.css";
 
 const renderData = (data) => {
   return (
-    <ul>
-      {data.map((l, index) => {
-        return <li key={index}>{l}</li>;
-      })}
-    </ul>
+    <tbody>
+      {data}
+    </tbody>
   );
 };
 
@@ -19,19 +18,75 @@ const Paging = (category) => {
   const [data, setData] = useState([]);
 
   const [curPage, setCurPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const [pageNumberLimit, setpageNumberLimit] = useState(5);
-  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [pageNumberLimit, setpageNumberLimit] = useState(10);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(10);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
 
+  const firstUpdate = useRef(true)
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      return
+    }
+  });
   const getDataFromDatabase = async() => {
     var cat = category.category
     console.log({cat})
     const list_ref = ref(db, cat)
     await onValue(list_ref, (snapshot) => {
       snapshot.forEach(function(childSnapshot) {
-        setData(old =>[...old, childSnapshot.child('product_name').val()])
+        let child = childSnapshot.val()
+        let temp
+        if (cat.includes('Housing')) {
+          temp = (
+            <tr className="list-item">
+              <td className="item-image"><img src={child.img_url} alt={child.product_name}/></td>
+              <td className="item-name">{child.product_name}</td>
+              <td className="item-size">{child.size}</td>
+              <td className="item-price">{child.product_price}</td>
+              <td className="item-add-button"><NavLink to ='/list-maker'><button className="add-item-button">Add to List</button></NavLink></td>
+            </tr>
+          )
+        }
+        //   switches,
+        if (cat.includes('Switches')) {
+          temp = (
+            <tr className="list-item">
+              <td className="item-image"><img src={child.img_url} alt={child.product_name}/></td>
+              <td className="item-name">{child.product_name}</td>
+              <td className="item-material">{child.material}</td>
+              <td className="item-price">{child.product_price}</td>
+              <td className="item-add-button"><NavLink to ='/list-maker'><button className="add-item-button">Add to List</button></NavLink></td>
+            </tr>
+          )
+        }
+        //   keycap,
+        if (cat.includes('Keycaps')) {
+          temp = (
+            <tr className="list-item">
+              <td className="item-image"><img src={child.img_url} alt={child.product_name}/></td>
+              <td className="item-name">{child.product_name}</td>
+              {/*change to type when ya get there
+              <td className="item-material">{kc.material}</td>*/}
+              <td className="item-price">{child.product_price}</td>
+              <td className="item-add-button"><NavLink to ='/list-maker'><button className="add-item-button">Add to List</button></NavLink></td>
+            </tr>
+          )
+        }
+        //   pcb
+        if (cat.includes('Housing')) {
+          temp = (
+            <tr className="list-item">
+              <td className="item-image"><img src={child.img_url} alt={child.product_name}/></td>
+              <td className="item-name">{child.product_name}</td>
+              <td className="item-size">{child.size}</td>
+              <td className="item-price">{child.price}</td>
+            </tr>
+          )
+        }
+        setData(old =>[...old, temp])
       })
     })
     console.log({data})
@@ -99,39 +154,41 @@ const Paging = (category) => {
     decrementBtn = <li onClick={handlePrevious}> &hellip; </li>;
   }
 
-  const handleLoadMore = () => {
-    setItemsPerPage(itemsPerPage + 5);
-  };
-
   return (
     <>
-      <h1>Todo List</h1> <br />
-      {renderData(currentItems)}
-      <ul className="pageNumbers">
-        <li>
-          <button
-            onClick={handlePrevious}
-            disabled={curPage == pages[0] ? true : false}
-          >
-            Prev
-          </button>
-        </li>
-        {decrementBtn}
-        {renderPageNumbers}
-        {incrementBtn}
+    
+    <div className="paging-container">
 
-        <li>
-          <button
-            onClick={handleNext}
-            disabled={curPage == pages[pages.length - 1] ? true : false}
-          >
-            Next
-          </button>
-        </li>
-      </ul>
-      <button onClick={handleLoadMore} className="loadmore">
-        Load More
-      </button>
+    {firstUpdate.current ? (<p>Loading...</p>):(
+      <>
+        <h1>{category.category.split('/')[0]}</h1> <br />
+        {renderData(currentItems)}
+        <ul className="pageNumbers">
+          <li>
+            <button
+              onClick={handlePrevious}
+              disabled={curPage == pages[0] ? true : false}
+            >
+              Prev
+            </button>
+          </li>
+          {decrementBtn}
+          {renderPageNumbers}
+          {incrementBtn}
+
+          <li>
+            <button
+              onClick={handleNext}
+              disabled={curPage == pages[pages.length - 1] ? true : false}
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </>
+    )}
+
+    </div>
     </>
   );
 }
