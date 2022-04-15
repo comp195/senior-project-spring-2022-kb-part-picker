@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
-import "./style.css";
+import { db } from '../../firebase'
+import { ref, onValue } from 'firebase/database'
+
+import "./paging.css";
 
 
 const renderData = (data) => {
   return (
     <ul>
-      {data.map((todo, index) => {
-        return <li key={index}>{todo.title}</li>;
+      {data.map((l, index) => {
+        return <li key={index}>{l}</li>;
       })}
     </ul>
   );
 };
 
-const Paging = () => {
+const Paging = (category) => {
   const [data, setData] = useState([]);
 
   const [curPage, setCurPage] = useState(1);
@@ -21,6 +24,18 @@ const Paging = () => {
   const [pageNumberLimit, setpageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+
+  const getDataFromDatabase = async() => {
+    var cat = category.category
+    console.log({cat})
+    const list_ref = ref(db, cat)
+    await onValue(list_ref, (snapshot) => {
+      snapshot.forEach(function(childSnapshot) {
+        setData(old =>[...old, childSnapshot.child('product_name').val()])
+      })
+    })
+    console.log({data})
+  }
 
   const handleClick = (event) => {
     setCurPage(Number(event.target.id));
@@ -53,9 +68,7 @@ const Paging = () => {
   });
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos")
-      .then((response) => response.json())
-      .then((json) => setData(json));
+    getDataFromDatabase()
   }, []);
 
   const handleNext = () => {
