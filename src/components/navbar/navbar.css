@@ -11,7 +11,7 @@
     margin-top: .75rem;
     font-family: var(--font-family);
     font-weight: 500;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 116.19%;
     text-transform: capitalize;
     letter-spacing: 0.05em;
@@ -58,5 +58,5 @@
 .home p {
     align-items: flex-start;
     color: #540C49;
-    font-size: 36px;
+    font-size: 28px;
 }

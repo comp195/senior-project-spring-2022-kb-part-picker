@@ -6,20 +6,52 @@
     justify-items:center;
     grid-column: auto;
     column-gap: 1%;
+    
 }
-tbody {
-    width: 50%;
-    row-gap: 10%;
+
+ table {
+  margin: auto;
+  width: 50rem;
+  border-collapse: collapse;
 }
 
 tr {
-    padding: 10rem
+  border-color: black;
+  border-bottom: 1px solid;
+}
+
+.item-name > a {
+  color: #78d0dd
+}
+
+.item-name > a:hover {
+  color: white;
+  transition: .3s ease;
+}
+
+.item-image {
+  width: 10%;
 }
 
 .item-image img {
-    height: 30%;
-    width: 30%;
-    
+  height: 100%;
+  width: 100%;
+  
+}
+
+.item-name {
+  font-weight: 501;
+  padding-left: 1rem;
+  width: 45%
+}
+
+.item-size {
+  padding: 0 1rem
+}
+
+.item-price {
+  text-align: end;
+  padding-right: 1rem;
 }
 
 .list-item {
@@ -31,25 +63,25 @@ tr {
     display: flex;
   }
   
-  .pageNumbers li {
-    padding: 10px;
-    border: 1px solid black;
-    cursor: pointer;
-  }
-  
-  .pageNumbers li.active {
-    background-color: white;
-  }
-  
-  .pageNumbers li button {
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .pageNumbers li button:hover {
-    background-color: white;
-    color: black;
-  }
-  .pageNumbers li button:focus {
-    outline: none;
-  }
+.pageNumbers li {
+  padding: 10px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.pageNumbers li.active {
+  background-color: white;
+}
+
+.pageNumbers li button {
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.pageNumbers li button:hover {
+  background-color: white;
+  color: black;
+}
+.pageNumbers li button:focus {
+  outline: none;
+}

@@ -19,36 +19,34 @@ const ListMaker = () => {
 
   const accountName = useAuth()
 
-  // make sure account auth is checked before getting list from db
-  const firstUpdate = useRef(true)
-  useLayoutEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false
-      return
-    }
-
-    if (dbUpdating) {
-      {accountName ? (getPartListFromDatabase()):(handleNothing())}
-      setDBUpdating(false)
-      setKeycap(makeBasicPartComponent("Keycaps"))
-      setHousing(makeBasicPartComponent("Housing"))
-      setSwitches(makeBasicPartComponent("Switches"))
-      setPCB(makeBasicPartComponent("PCB"))
-    }
-  });
-
   const makeBasicPartComponent = (category) => {
     var link = '/' + category.toLowerCase()
     return(
       <tr className="list-item">
         <td className="item-category">{category}</td>
-        <td className="item-add-button"><NavLink to ={link}><button className="add-item-button" onClick={handleGoToPartPage(category)}>Add {category}</button></NavLink></td>
+        <td className="item-add-button">
+          <NavLink to ={link}>
+            <button className="add-item-button">
+              Add {category}
+            </button>
+          </NavLink>
+        </td>
       </tr>
     )
   }
-  
-  const handleGoToPartPage = (category) => {
-    //<NavLink to ='/list-maker'>
+
+  const makeSpecificPartComponent = (p, category) => {
+    return (
+      <tr className="list-item">
+        <td className="item-category">Case</td>
+        <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
+        <td className="item-name">{p.product_name}</td>
+        {category.includes('Housing') ? (<td className="item-size">{p.size}</td>):(<></>)}
+        {category.includes('Keycaps') ? (<td className="item-material">{p.material}</td>):(<></>)}
+        {category.includes('Switches') ? (<td className="item-size">{p.size}</td>):(<></>)}
+        <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
+      </tr>
+    )
   }
 
   const handleNothing = () => {
@@ -62,55 +60,22 @@ const ListMaker = () => {
     //   housing,
     if (!item.housing.includes("Unknown")) {
       var h = getPartFromDatabase('Housing/', item.housing)
-      setHousing(
-        <tr className="list-item">
-          <td className="item-category">Case</td>
-          <td className="item-image"><img src={h.img_url} alt={h.product_name}/></td>
-          <td className="item-name">{h.product_name}</td>
-          <td className="item-size">{h.size}</td>
-          <td className="item-price">{h.price}</td>
-        </tr>
-      )
+      setHousing(makeSpecificPartComponent(h, 'Housing'))
     }
     //   switches,
     if (!item.switches.includes("Unknown")) {
       var sw = getPartFromDatabase('Switches/', item.housing)
-      setSwitches(
-        <tr className="list-item">
-          <td className="item-category">Switches</td>
-          <td className="item-image"><img src={sw.img_url} alt={sw.product_name}/></td>
-          <td className="item-name">{sw.product_name}</td>
-          <td className="item-material">{sw.material}</td>
-          <td className="item-price">{sw.price}</td>
-        </tr>
-      )
+      setSwitches(makeSpecificPartComponent(sw, 'Switches'))
     }
     //   keycap,
     if (!item.keycap.includes("Unknown")) {
       var kc = getPartFromDatabase('Keycaps/', item.housing)
-      setKeycap(
-        <tr className="list-item">
-          <td className="item-category">Keycaps</td>
-          <td className="item-image"><img src={kc.img_url} alt={kc.product_name}/></td>
-          <td className="item-name">{kc.product_name}</td>
-          {/*change to type when ya get there
-          <td className="item-material">{kc.material}</td>*/}
-          <td className="item-price">{kc.price}</td>
-        </tr>
-      )
+      setKeycap(makeSpecificPartComponent(kc, 'Keycaps'))
     }
     //   pcb
     if (!item.pcb.includes("Unknown")) {
-      var p = getPartFromDatabase('pcb/', item.housing)
-      setPCB(
-        <tr className="list-item">
-          <td className="item-category">PCB</td>
-          <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
-          <td className="item-name">{p.product_name}</td>
-          <td className="item-size">{p.size}</td>
-          <td className="item-price">{p.price}</td>
-        </tr>
-      )
+      var p = getPartFromDatabase('PCB/', item.housing)
+      setPCB(makeSpecificPartComponent(p, 'PCB'))
     }
 
   }
@@ -158,6 +123,24 @@ const ListMaker = () => {
   // update
   // delete
 
+  // make sure account auth is checked before getting list from db
+  const firstUpdate = useRef(true)
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      return
+    }
+
+    if (dbUpdating) {
+      {accountName ? (getPartListFromDatabase()):(handleNothing())}
+      setDBUpdating(false)
+      setKeycap(makeBasicPartComponent("Keycaps"))
+      setHousing(makeBasicPartComponent("Housing"))
+      setSwitches(makeBasicPartComponent("Switches"))
+      setPCB(makeBasicPartComponent("PCB"))
+    }
+  })
+
   return (
     
     <>
@@ -176,12 +159,14 @@ const ListMaker = () => {
             )
           }  
         </select> 
-        <tbody>
-          {keycap}
-          {housing}
-          {switches}
-          {pcb}
-        </tbody>
+        <table>
+          <tbody>
+            {keycap}
+            {housing}
+            {switches}
+            {pcb}
+          </tbody>
+        </table>
         {accountName ? (
           <button onClick={writeToDatabase}>Make List</button>
         ) : (

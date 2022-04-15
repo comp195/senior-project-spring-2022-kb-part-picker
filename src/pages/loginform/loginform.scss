@@ -3,32 +3,17 @@ $color-light: #fff;
 $bg-size-end: 4.2;
 $dur: .3s;
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-family);
-  overflow: hidden;
-}
 
-button {
-  border: none;
-  outline: none;
-  width: 100%;
-  padding: 15px 0;
-  color: #fff;
-  font-size: 16px;
-  letter-spacing: 1px;
-  background: #603bbb;
-  cursor: pointer;
-}
 
 .login {
+  box-sizing: border-box;
+  margin: 0;
   width: 100%;
   min-height: 40rem;
   padding: 0 2rem;
   display: flex;
 }
+
 
 .login .loginContainer {
   padding: 3rem;
@@ -46,6 +31,17 @@ button {
     rgba(17, 27, 75, 0.9) 100%
   );
   box-shadow: 0 1rem 1rem -1rem rgba(0, 0, 0, 0.8);
+}
+.btnContainer > button {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 15px 0;
+  color: #fff;
+  font-size: 16px;
+  letter-spacing: 1px;
+  background: #603bbb;
+  cursor: pointer;
 }
 
 .login .loginContainer label {

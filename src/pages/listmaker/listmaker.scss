@@ -14,6 +14,7 @@ body {
 .list-maker {
   display:grid;
   justify-content: center;
+  margin: auto;
 }
 
 /* <select> styles */
@@ -45,7 +46,32 @@ select {
 
 button {
   align-items: center;
-  width: 12rem;
+}
+.add-item-button {
+  background-color: $secondary;
+  font-family: "Open Sans", sans-serif;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.add-item-button:active {
+  box-shadow: 0px;
+  top: 2px;
+  left: 2px;
+}
+
+@media (min-width: 768px) {
+  .button-54 {
+    padding: 0.25em 0.75em;
+  }
 }
 
 .disabled {
