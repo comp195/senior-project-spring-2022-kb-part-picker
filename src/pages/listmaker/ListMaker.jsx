@@ -167,11 +167,13 @@ const ListMaker = () => {
             {pcb}
           </tbody>
         </table>
-        {accountName ? (
-          <button onClick={writeToDatabase}>Make List</button>
-        ) : (
-          <button disabled className='disabled' onClick={handleNothing}>Make List</button>
-        )}
+        <div className="makelist-button">
+          {accountName ? (
+            <button onClick={writeToDatabase}>Make List</button>
+          ) : (
+            <button disabled className='disabled' onClick={handleNothing}>Make List</button>
+          )}
+        </div>
         </>
       )
       }

@@ -27,7 +27,7 @@ const Home = () => {
         }}/>
       </div>
       <div className="dropdown-container">
-        {/* <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
+        <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
           <option value="default">--keycaps--</option>
           <option value="abs">ABS</option>
         </select>
@@ -42,7 +42,7 @@ const Home = () => {
         <select name="PCB" id="pcb" value={pcb} onChange={(e) => setPCB(e.target.value)}>
           <option value="default">--pcb--</option>
           <option value="65%">65%</option>
-        </select> */}
+        </select>
       </div>
     </div>
   )

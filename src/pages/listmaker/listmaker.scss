@@ -47,14 +47,15 @@ select {
 button {
   align-items: center;
 }
+
 .add-item-button {
-  background-color: $secondary;
+  background-color: #78d0dd;
   font-family: "Open Sans", sans-serif;
   text-decoration: none;
   text-transform: uppercase;
   color: #000;
   cursor: pointer;
-  border: 3px solid;
+  border: 1.75px solid;
   padding: 0.25em 0.5em;
   position: relative;
   user-select: none;
@@ -69,7 +70,7 @@ button {
 }
 
 @media (min-width: 768px) {
-  .button-54 {
+  .add-item-button {
     padding: 0.25em 0.75em;
   }
 }
@@ -107,6 +108,8 @@ button {
 .list-name{
   &:required,&:invalid { box-shadow:none; }
 }
+
+
 
 .default {
   font-style: italic
