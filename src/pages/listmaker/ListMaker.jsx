@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react'
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { NavLink, useParams } from "react-router-dom";
 import {db, useAuth} from '../../firebase'
 import {set, ref, onValue, child} from 'firebase/database'
@@ -17,17 +17,17 @@ const ListMaker = () => {
     list_name: 'Unknown',
     housing: 'Unknown',
     switches: 'Unknown',
-    keycap: 'Unknown',
+    keycaps: 'Unknown',
     pcb: 'Unknown'
   })
 
   const listObtained = useRef(false)
-
+  const wantNewList = useRef(false)
 
   const [curListID, setCurListID] = useState("")
   const [curListName, setCurListName] = useState('')
 
-  const [keycap, setKeycap] = useState("")
+  const [keycaps, setKeycaps] = useState("")
   const [housing, setHousing] = useState("")
   const [switches, setSwitches] = useState("")
   const [pcb, setPCB] = useState("")
@@ -50,7 +50,7 @@ const ListMaker = () => {
           {(listSelected.current && !editingEnabled.current) ? (<></>):(
             <>
             <NavLink to = {newTo}>
-              <button className="add-item-button" onClick={test}>
+              <button className="add-item-button">
                 Add
               </button>
             </NavLink>
@@ -60,9 +60,7 @@ const ListMaker = () => {
       </tr>
     )
   }
-  const test = () => {
-    console.log({curListObj})
-  }
+
   const makeSpecificPartComponent = (p, category) => {
     return (
       <tr className="list-item">
@@ -84,34 +82,18 @@ const ListMaker = () => {
     return
   }
 
-  const handleChangeList = async (e, ee) => {
-    setKeycap(makeBasicPartComponent("Keycaps"))
-    setHousing(makeBasicPartComponent("Housing"))
-    setSwitches(makeBasicPartComponent("Switches"))
-    setPCB(makeBasicPartComponent("PCB"))
+  const handleChangeList = async (e, ee, i=null) => {
     if (editingEnabled.current) {
       listSelected.current = false
     }
-    else {
-      listSelected.current = true
-    }
     
     editingEnabled.current = ee
+    if(!editingEnabled.current) {
+      listSelected.current = true
+    }
 
     setCurListID(e)
     setCurListName(e.list_name)
-
-    console.log('listObtained: ' + listObtained.current)
-    console.log('listSelected: ' + listSelected.current)
-    console.log('editingEnabled: ' + editingEnabled.current)
-    if (e === 'New' && !editingEnabled.current) {
-      editingEnabled.current = true
-      setKeycap(makeBasicPartComponent("Keycaps"))
-      setHousing(makeBasicPartComponent("Housing"))
-      setSwitches(makeBasicPartComponent("Switches"))
-      setPCB(makeBasicPartComponent("PCB"))
-      return
-    }
 
     if(editingEnabled.current && listObtained.current) {
       setCurListName('New List')
@@ -125,35 +107,31 @@ const ListMaker = () => {
     if (!listObtained.current) {
       await getPartFromDatabase('PartList/', e)
       item = lists[lists.findIndex(l => l.list_id === e)]
+      console.log({item})
     }
-    else {
-      item = curListObj
+    else if (e === 'Edit') {
+      item = i
     }
 
     console.log({item})
     console.log({curListObj})
 
-    setKeycap(makeBasicPartComponent("Keycaps"))
+    setKeycaps(makeBasicPartComponent("Keycaps"))
     setHousing(makeBasicPartComponent("Housing"))
     setSwitches(makeBasicPartComponent("Switches"))
     setPCB(makeBasicPartComponent("PCB"))
     
-    //   housing,
+    if (e === 'New' && !editingEnabled.current) {
+      editingEnabled.current = true
+      wantNewList.current = true
+      listSelected.current = false
+      return
+    }
+
     if (!item.housing.includes("Unknown")) getPartFromDatabase('Housing/', item.housing)
-    else setHousing(makeBasicPartComponent('Housing'))
-    
-    //   switches,
     if (!item.switches.includes("Unknown")) getPartFromDatabase('Switches/', item.switches)
-    else setSwitches(makeBasicPartComponent('Switches'))
-    
-    //   keycap,
-    if (!item.keycap.includes("Unknown")) getPartFromDatabase('Keycaps/', item.keycap)
-    else setKeycap(makeBasicPartComponent('Keycaps'))
-    
-    //   pcb
+    if (!item.keycaps.includes("Unknown")) getPartFromDatabase('Keycaps/', item.keycaps)
     if (!item.pcb.includes("Unknown")) getPartFromDatabase('PCB/', item.pcb)
-    else setPCB(makeBasicPartComponent('PCB'))
-    
   }
 
   // read
@@ -183,21 +161,22 @@ const ListMaker = () => {
         if (childSnapshot.child('product_name').val() === product_name){
           switch(category) {
             case 'Housing/':
-              setHousing(makeSpecificPartComponent(childSnapshot.val(), 'Switches'))
+              setHousing(makeSpecificPartComponent(childSnapshot.val(), 'Housing'))
               break
             case 'Switches/':
               setSwitches(makeSpecificPartComponent(childSnapshot.val(), 'Switches'))
               break
             case 'Keycaps/':
-              setKeycap(makeSpecificPartComponent(childSnapshot.val(), 'Switches'))
+              setKeycaps(makeSpecificPartComponent(childSnapshot.val(), 'Keycaps'))
               break
             case 'PCB/':
-              setPCB(makeSpecificPartComponent(childSnapshot.val(), 'Switches'))
+              setPCB(makeSpecificPartComponent(childSnapshot.val(), 'PCB'))
               break
             default:
               console.log('Problem in getPartFromDatabase()')
               return
           }
+          return
         }
       })
     })
@@ -208,14 +187,18 @@ const ListMaker = () => {
   const writeToDatabase = () => {
     const list_id = uid()
     const current_uid = accountName.uid
+    var listToSave = curListObj
+    listToSave.list_name = curListName
+    listToSave.current_uid = current_uid
+    listToSave.list_id = list_id
     set (ref(db, `PartList/${list_id}`), {
-      current_uid,
-      list_id,
-      list_name: lists,
-      housing,
-      switches,
-      keycap,
-      pcb
+      current_uid: listToSave.current_uid,
+      list_id: listToSave.list_id,
+      list_name: listToSave.list_name,
+      housing: listToSave.housing,
+      switches: listToSave.switches,
+      keycaps: listToSave.keycaps,
+      pcb: listToSave.pcb
     })
   }
   
@@ -235,27 +218,28 @@ const ListMaker = () => {
     }
     
     if (dbUpdating) {
-      {accountName ? getPartListsFromDatabase():handleNothing()}
+      {accountName ? getPartListsFromDatabase():setDBUpdating(false)}
       setDBUpdating(false)
 
-      setKeycap(makeBasicPartComponent("Keycaps"))
+      setKeycaps(makeBasicPartComponent("Keycaps"))
       setHousing(makeBasicPartComponent("Housing"))
       setSwitches(makeBasicPartComponent("Switches"))
       setPCB(makeBasicPartComponent("PCB"))
-
-      if ((state != null && state != "makelist") && !listObtained.current) {
-        var test = JSON.parse(state)
-        console.log({test})
-        setCurListObj(JSON.parse(state))
-        console.log({state})
-        console.log({curListObj})
-        listObtained.current = true
-        editingEnabled.current = true
-        handleChangeList('New', true)
-        window.history.replaceState(null, '',  "/list-maker/makelist")
-      }
     }
   })
+
+  useEffect(() => {
+    if ((state !== null && state !== "makelist") && !listObtained.current && !wantNewList.current) {
+      var item = JSON.parse(state)
+      window.history.replaceState(null, '',  "/list-maker/makelist")
+
+      setCurListObj(item)
+
+      listObtained.current = true
+      handleChangeList('Edit', true, item)
+      .then((e) => console.log('resolved!'))
+    }
+  }, [curListObj])
 
   return (
     <>
@@ -272,10 +256,10 @@ const ListMaker = () => {
           }  
         </select> 
 
-        {(editingEnabled.current || listSelected.current) ? <input type="text" name='New List' required className="list-name" /> : <></> }
+        {(editingEnabled.current || listSelected.current) ? <input type="text" name='New List' required className="list-name" value={curListName} onChange={(e)=>{setCurListName(e.target.value)}}/> : <></> }
         <table>
           <tbody>
-            {keycap}
+            {keycaps}
             {housing}
             {switches}
             {pcb}
@@ -288,7 +272,7 @@ const ListMaker = () => {
             {(listSelected.current && !editingEnabled.current) ? 
               <button onClick={() => handleChangeList(curListID, true)}>Edit List</button>
             :
-              <button onClick={handleWriteList}>Make List</button>
+              <button onClick={writeToDatabase}>Make List</button>
             }
             </>
           ) : 

@@ -24,7 +24,7 @@ const Paging = (c) => {
     list_name: 'Unknown',
     housing: 'Unknown',
     switches: 'Unknown',
-    keycap: 'Unknown',
+    keycaps: 'Unknown',
     pcb: 'Unknown'
   })
 
@@ -56,7 +56,7 @@ const Paging = (c) => {
         tempList.switches=p.product_name
         break;
       case 'Keycaps/':
-        tempList.keycap=p.product_name
+        tempList.keycaps=p.product_name
         break;
       case 'PCB/':
         tempList.pcb=p.product_name
