@@ -16,7 +16,7 @@ const Navbar = () => {
           <p><NavLink to ='/'>KB PART PICKER</NavLink></p>
         </div>
         <div className="navbar-links">
-      <NavLink to ='/list-maker'>
+      <NavLink to ='/list-maker/makelist'>
         <div className='makelist_img'>
           <img src={list} alt='Make List'/>
           <p> MAKE LIST </p>

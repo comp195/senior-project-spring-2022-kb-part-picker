@@ -12,11 +12,11 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path='/' element={<Home />}/>
-          <Route path='/list-maker' element={<ListMaker/>}/>
-          <Route path='/housing' element={<Paging category={'Housing/'}/>}/>
-          <Route path='/keycaps' element={<Paging category={'Keycaps/'}/>}/>
-          <Route path='/switches' element={<Paging category={'Switches/'}/>}/>
-          <Route path='/pcb' element={<Paging category={'PCB/'}/>}/>
+          <Route path='/list-maker/:state' element={<ListMaker />}/>
+          <Route path='/housing/:state' element={<Paging category={'Housing/'}/>}/>
+          <Route path='/keycaps/:state' element={<Paging category={'Keycaps/'} />}/>
+          <Route path='/switches/:state' element={<Paging category={'Switches/'}/>}/>
+          <Route path='/pcb/:state' element={<Paging category={'PCB/'}/>}/>
           <Route path='/login-form' element={<LoginForm />}/>
         </Routes>
       </Router>

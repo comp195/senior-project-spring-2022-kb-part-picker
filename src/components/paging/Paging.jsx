@@ -1,9 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 import { db } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 
 import "./paging.css";
+
 
 
 const renderData = (data) => {
@@ -14,19 +15,60 @@ const renderData = (data) => {
   )
 }
 
-const Paging = (category) => {
+const Paging = (c) => {
+  const { state } = useParams()
+  const category = c.category
+  const [curListObj, setCurListObj] = useState({
+    current_uid: 'Unknown',
+    list_id: null,
+    list_name: 'Unknown',
+    housing: 'Unknown',
+    switches: 'Unknown',
+    keycap: 'Unknown',
+    pcb: 'Unknown'
+  })
+
+  const listObtained = useRef(false)
+  if ((state != null) && !listObtained.current) {
+    setCurListObj(JSON.parse(state))
+    listObtained.current = true
+  }
+
   const [data, setData] = useState([])
 
   const [curPage, setCurPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [itemsPerPage] = useState(10)
 
-  const [maxPagesToDisplay, setMaxPagesToDisplay] = useState(10)
+  const [maxPagesToDisplay] = useState(10)
   const [maxPerPage, setMaxPerPage] = useState(10)
   const [minPerPage, setMinPerPage] = useState(0)
 
   const firstUpdate = useRef(true)
 
-  const makeSpecificPartComponent = (p, category, index) => {
+
+  const makeSpecificPartComponent = (p, index) => {
+    var tempList = curListObj
+    switch(category) {
+      case 'Housing/':
+        tempList.housing=p.product_name
+        break;
+      case 'Switches/':
+        tempList.switches=p.product_name
+        break;
+      case 'Keycaps/':
+        tempList.keycap=p.product_name
+        break;
+      case 'PCB/':
+        tempList.pcb=p.product_name
+        break;
+      default:
+        break;
+    }
+    var link = '/list-maker/' + JSON.stringify(tempList)
+    const newTo = {
+      pathname: link,
+      category,
+    }
     return (
       <tr key={index} className="list-item">
         <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
@@ -35,20 +77,23 @@ const Paging = (category) => {
         {category.includes('Keycaps') ? (<td className="item-material">{p.material}</td>):(<></>)}
         {category.includes('Switches') ? (<td className="item-type">{p.type}</td>):(<></>)}
         <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
-        <td className="item-add-button"><NavLink to ='/list-maker'><button className="add-item-button">Add</button></NavLink></td>
+        <td className="item-add-button">
+          <NavLink to ={newTo}>
+            <button className="add-item-button" >Add</button>
+          </NavLink>
+        </td>
       </tr>
     )
   }
 
   const getDataFromDatabase = async() => {
-    var cat = category.category
-    console.log({cat})
-    const list_ref = ref(db, cat)
+    console.log({cat: category})
+    const list_ref = ref(db, category)
     await onValue(list_ref, (snapshot) => {
       let index = 0
       snapshot.forEach(function(childSnapshot) {
         let child = childSnapshot.val()
-        let temp = makeSpecificPartComponent(child, cat, index)
+        let temp = makeSpecificPartComponent(child, index)
         index++
         
         setData(old =>[...old, temp])
@@ -119,6 +164,7 @@ const Paging = (category) => {
   useLayoutEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false
+      window.history.replaceState(null, '',  "/"+category.toLowerCase())
       return
     }
   })
@@ -134,7 +180,7 @@ const Paging = (category) => {
 
     {firstUpdate.current ? (<p>Loading...</p>):(
       <>
-        <h1>{category.category.split('/')[0]}</h1> <br />
+        <h1>{c.category.split('/')[0]}</h1> <br />
         <table>
           {renderData(currentItems)}
         </table>
