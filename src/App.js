@@ -13,8 +13,6 @@ const press_sfx = (source) => {
     src: source
   }).play()
 }
-  
-
 
 const release_sfx = (source) => {
   new Howl ( {
@@ -24,8 +22,6 @@ const release_sfx = (source) => {
 
 const App = () => {
   const handleKeyPress = () => {
-    console.log('sheesh')
-    console.log(keyPress)
     press_sfx(keyPress)
   }
 
