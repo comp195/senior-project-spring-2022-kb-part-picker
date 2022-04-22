@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
-import { NavLink, useLocation, useParams } from "react-router-dom";
+import { NavLink, Prompt, useParams, useNavigate } from "react-router-dom";
 import { db } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 
@@ -16,6 +16,8 @@ const renderData = (data) => {
 }
 
 const Paging = (c) => {
+  const navigate = useNavigate()
+  const [isBlocking, setIsBlocking] = useState(true)
   const { state } = useParams()
   const category = c.category
   const [curListObj, setCurListObj] = useState({
@@ -78,16 +80,20 @@ const Paging = (c) => {
         {category.includes('Switches') ? (<td className="item-type">{p.type}</td>):(<></>)}
         <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
         <td className="item-add-button">
-          <NavLink to ={newTo}>
-            <button className="add-item-button" >Add</button>
-          </NavLink>
+          <button className="add-item-button" onMouseDown={() => handleAccessPagination()} onMouseUp={() => handleGoToPagination(newTo)} onMouseLeave={() => handleSussyMouseMovement()} >Add</button>
         </td>
       </tr>
     )
   }
 
+  const handleSussyMouseMovement = () => setIsBlocking(true)
+  const handleAccessPagination = () => setIsBlocking(false)
+  const handleGoToPagination = (newTo) => {
+    navigate(newTo)
+    setIsBlocking(true)
+  }
+
   const getDataFromDatabase = async() => {
-    console.log({cat: category})
     const list_ref = ref(db, category)
     await onValue(list_ref, (snapshot) => {
       let index = 0
@@ -100,7 +106,6 @@ const Paging = (c) => {
         
       })
     })
-    console.log({data})
   }
 
   const handleClick = (event) => {
@@ -175,9 +180,8 @@ const Paging = (c) => {
 
   return (
     <>
-    
+    { !!state ? <Prompt when={isBlocking} message="Are you sure you want to leave? Any unsaved progress will be lost!" />: <></>}
     <div className="paging-container">
-
     {firstUpdate.current ? (<p>Loading...</p>):(
       <>
         <h1>{c.category.split('/')[0]}</h1> <br />
