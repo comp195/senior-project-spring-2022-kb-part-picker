@@ -1,15 +1,16 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
-import { NavLink, useParams } from "react-router-dom";
-import {db, useAuth} from '../../firebase'
-import {set, ref, onValue, child} from 'firebase/database'
-import {uid} from "uid"
+import { NavLink, useParams, useNavigate, Prompt } from "react-router-dom"
+import { db, useAuth } from '../../firebase'
+import { set, ref, onValue, child } from 'firebase/database'
+import { uid } from "uid"
 
 import './listmaker.scss'
 
 const ListMaker = () => {
+  const navigate = useNavigate()
   const { state } = useParams()
   const listSelected = useRef(false)
-  const editingEnabled = useRef(false)
+  const editingEnabled = useRef(true)
   
   const [curListObj, setCurListObj] = useState({
     current_uid: 'Unknown',
@@ -21,6 +22,7 @@ const ListMaker = () => {
     pcb: 'Unknown'
   })
 
+  const [isBlocking, setIsBlocking] = useState(true)
   const listObtained = useRef(false)
   const wantNewList = useRef(false)
 
@@ -49,12 +51,10 @@ const ListMaker = () => {
         <td className="item-add-button">
           {(listSelected.current && !editingEnabled.current) ? (<></>):(
             <>
-            <NavLink to = {newTo}>
-              <button className="add-item-button">
-                Add
-              </button>
-            </NavLink>
-          </>
+            <button className="add-item-button" onMouseDown={() => handleAccessPagination()} onMouseUp={() => handleGoToPagination(newTo)} onMouseLeave={() => handleSussyMouseMovement()}> 
+              Add
+            </button>
+            </>
           )}
         </td>
       </tr>
@@ -73,7 +73,16 @@ const ListMaker = () => {
     )
   }
 
+  const handleSussyMouseMovement = () => setIsBlocking(true)
+  const handleAccessPagination = () => setIsBlocking(false)
+  const handleGoToPagination = (newTo) => {
+    navigate(newTo)
+    setIsBlocking(true)
+  }
+
   const handleNothing = () => {
+    console.log(isBlocking.current)
+    console.log(editingEnabled.current)
     return
   }
 
@@ -82,7 +91,7 @@ const ListMaker = () => {
     return
   }
 
-  const handleChangeList = async (e, ee, i=null) => {
+  const handleChangeList = async (e, ee, i=null, ls=null) => {
     if (editingEnabled.current) {
       listSelected.current = false
     }
@@ -90,6 +99,10 @@ const ListMaker = () => {
     editingEnabled.current = ee
     if(!editingEnabled.current) {
       listSelected.current = true
+    }
+
+    if(ls) {
+      listSelected.current = ls
     }
 
     setCurListID(e)
@@ -237,12 +250,17 @@ const ListMaker = () => {
 
       listObtained.current = true
       handleChangeList('Edit', true, item)
-      .then((e) => console.log('resolved!'))
+      .then(() => console.log('resolved!'))
     }
   }, [curListObj])
-
+  
   return (
     <>
+    { editingEnabled.current ?
+        <Prompt when={isBlocking} message='Are you sure you want to leave? Any unsaved progress will be lost!' /> 
+      :
+      <></>
+    }
       <div className="list-maker">
       {dbUpdating ? (<p>Loading...</p>):(
         <>
@@ -270,7 +288,7 @@ const ListMaker = () => {
           {accountName ? (
             <>
             {(listSelected.current && !editingEnabled.current) ? 
-              <button onClick={() => handleChangeList(curListID, true)}>Edit List</button>
+              <button onClick={() => handleChangeList(curListID, true, null, true)}>Edit List</button>
             :
               <button onClick={writeToDatabase}>Make List</button>
             }

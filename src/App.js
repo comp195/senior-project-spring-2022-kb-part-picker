@@ -46,10 +46,4 @@ const App = () => {
   )
 }
 
-document.addEventListener('keydown', function (event){
-  if (event.keyDown) {
-    press_sfx.play(keyPress)
-  }
-})
-
 export default App
