@@ -35,16 +35,19 @@ const WebScraper = () => {
         const size_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[8]/div/ul/li[1]/text()'
         const mat_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/p[2]/strong[2]'
         const mat_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/h2'
-                
+        const type_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/div/table/tbody/tr[1]/td[2]/text()'
+        const type_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/table/tbody/tr[1]/td[2]'
+        
         var p_img_xp = ''
         var price_xp = ''
         var mat_xp = ''
         var size_xp = ''
+        var type_xp = ''
 
         for (let i = 0; i < hrefs.length; i++) {
             const link = hrefs[i]
 
-            if(!link.includes('/product')) continue 
+            if(!link.includes('/product') || !link.includes('/supplies') || !link.includes('/accessories')) continue 
 
             // set proper xpaths per site
             if (link.includes('cannonkeys')) {
@@ -52,12 +55,14 @@ const WebScraper = () => {
                 price_xp = price_ck_xp
                 mat_xp = mat_ck_xp
                 size_xp = size_ck_xp
+                type_xp = type_ck_xp
             }
             else if (link.includes('novelkeys')) {
                 p_img_xp = p_img_nk_xp
                 price_xp = price_nk_xp
                 mat_xp = mat_nk_xp
                 size_xp = size_nk_xp
+                type_xp = type_nk_xp
             }
             else {
                 continue
@@ -91,10 +96,12 @@ const WebScraper = () => {
             
             //save product to db, only if switch, keycap, or housing
             if(link.includes('/switches') && (product_name.includes('Switch') && !product_name.includes('Film'))){ 
+                var type = 'Unknown'
                 set (ref(db, `Switches/${product_name}`), {
                     product_name,
                     product_price,
                     img_url,
+                    type,
                     link
                 })
             }
@@ -123,8 +130,77 @@ const WebScraper = () => {
                     link
                 })
             }
-            if(link.includes('keycaps/')) {
+            else if(link.includes('keycaps/')) {
                 // get keycap material (abs, pbt)
+                var material = await parseJSONFromXP(page, mat_xp, 'textContent')
+
+                if (material.toLowerCase().includes('abs')) {
+                    material = 'ABS'
+                }
+                else if (material.toLowerCase().includes('pbt')) {
+                    material = 'PBT'
+                }
+                else {
+                    material = 'Unknown'
+                }
+
+
+                set (ref(db, `Keycaps/${product_name}`), {
+                    product_name,
+                    product_price,
+                    img_url,
+                    material,
+                    link
+                })
+            }
+            else if(link.includes('keycaps/')) {
+                // get keycap material (abs, pbt)
+                var material = await parseJSONFromXP(page, mat_xp, 'textContent')
+
+                if (material.toLowerCase().includes('abs')) {
+                    material = 'ABS'
+                }
+                else if (material.toLowerCase().includes('pbt')) {
+                    material = 'PBT'
+                }
+                else {
+                    material = 'Unknown'
+                }
+
+
+                set (ref(db, `Keycaps/${product_name}`), {
+                    product_name,
+                    product_price,
+                    img_url,
+                    material,
+                    link
+                })
+            }
+            else if(link.includes('stabilizer')) {
+                // get keycap material (abs, pbt)
+                var material = await parseJSONFromXP(page, mat_xp, 'textContent')
+
+                if (material.toLowerCase().includes('abs')) {
+                    material = 'ABS'
+                }
+                else if (material.toLowerCase().includes('pbt')) {
+                    material = 'PBT'
+                }
+                else {
+                    material = 'Unknown'
+                }
+
+
+                set (ref(db, `Keycaps/${product_name}`), {
+                    product_name,
+                    product_price,
+                    img_url,
+                    material,
+                    link
+                })
+            }
+            else if(link.includes('plate')) {
+                // get plate material (brass, copper, polycarbonate)
                 var material = await parseJSONFromXP(page, mat_xp, 'textContent')
 
                 if (material.toLowerCase().includes('abs')) {

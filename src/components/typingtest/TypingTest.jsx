@@ -4,7 +4,7 @@ import './typingtest.css'
 
 const TypeTest = () => {
   return (
-    <TypingTest language='english' wordLimit={50} theme='Miami' />
+    <TypingTest language='english' wordLimit={80} theme='Miami' />
   )
 }
 

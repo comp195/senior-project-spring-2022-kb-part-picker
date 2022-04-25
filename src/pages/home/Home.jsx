@@ -1,14 +1,90 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useRef, useLayoutEffect} from 'react'
 
+import { db, useAuth } from '../../firebase'
+import { ref, onValue } from 'firebase/database'
 import { TypeTest, Keyboard } from '../../components'
+import { uid } from "uid"
 
 import './home.css'
 
 const Home = () => {
-  const [housing, setHousing] = useState("")
-  const [switches, setSwitches] = useState("")
-  const [keycap, setKeycap] = useState("")
-  const [pcb, setPCB] = useState("")
+
+  const [keycaps, setKeycaps] = useState("None")
+  const [housing, setHousing] = useState("None")
+  const [switches, setSwitches] = useState("None")
+  const [plate, setPlate] = useState("None")
+
+  const [dbUpdating, setDBUpdating] = useState(true)
+  const [curListID, setCurListID] = useState("")
+  const [curListName, setCurListName] = useState('')
+  const [lists, setLists] = useState([])
+
+  const accountName = useAuth()
+
+  const handleChangeList = (e) => {
+    setCurListID(e)
+    console.log({e})
+    var temp = lists.find(obj => obj.list_id.includes(e))
+
+    if (!temp.housing.includes('Unknown')) {}
+  }
+
+  async function getPartListsFromDatabase() {
+    if (dbUpdating) {
+      const list_ref = ref(db, 'PartList/')
+      await onValue(list_ref, (snapshot) => {
+        snapshot.forEach(function(childSnapshot) {
+          if (childSnapshot.child('current_uid').val() === accountName.uid)
+            setLists(old =>[...old, childSnapshot.val()])
+        })
+      })
+      setDBUpdating(false)
+    }
+  }
+
+  async function getPartFromDatabase(category, product_name) {
+    const part_ref = await ref(db, category)
+
+    await onValue(part_ref, (snapshot) => {
+      snapshot.forEach(function(childSnapshot) {
+        if (childSnapshot.child('product_name').val() === product_name){
+          switch(category) {
+            case 'Housing/':
+              setHousing(childSnapshot.child('material').val())
+              break
+            case 'Switches/':
+              setSwitches(childSnapshot.child('type').val())
+              break
+            case 'Keycaps/':
+              setKeycaps(childSnapshot.child('material').val())
+              break
+            case 'Plate/':
+              setPlate(childSnapshot.child('material').val())
+              break
+            default:
+              console.log('Problem in getPartFromDatabase()')
+              return
+          }
+          return
+        }
+      })
+    })
+  }
+
+  // make sure account auth is checked before getting list from db
+  const firstUpdate = useRef(true)
+  useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      return
+    }
+    
+    if (dbUpdating) {
+      {accountName ? getPartListsFromDatabase():setDBUpdating(false)}
+      setDBUpdating(false)
+
+    }
+  })
   
   return (
     <div>
@@ -26,23 +102,22 @@ const Home = () => {
             ]
         }}/>
       </div>
-      <div className="dropdown-container">
-        <select name="Keycaps" id="keycaps" value={keycap} onChange={(e) => setKeycap(e.target.value)} >
-          <option value="default">--keycaps--</option>
-          <option value="abs">ABS</option>
-        </select>
-        <select name="Case" id="case" value={housing} onChange={(e) => setHousing(e.target.value)} >
-          <option value="default">-case--</option>
-          <option value="Aluminum">Aluminum</option>
-        </select>
-        <select name="Switch" id="switch" value={switches} onChange={(e) => setSwitches(e.target.value)}>
-          <option value="default">--switch--</option>
-          <option value="MX Blue">MX Blue</option>
-        </select>
-        <select name="PCB" id="pcb" value={pcb} onChange={(e) => setPCB(e.target.value)}>
-          <option value="default">--pcb--</option>
-          <option value="65%">65%</option>
-        </select>
+      <div className="dropdown-container">   
+        <select className='list-select' name="Lists" id="lists" value={curListID} onChange={(e) => handleChangeList(e.target.value)} >
+            <option default value='Choose'>Choose a List</option> 
+            {dbUpdating ? (<></>): (
+                lists.map((l,i) => (
+                  <option key={i} value={l.list_id}>{l.list_name}</option>
+                ))
+              )
+            }  
+          </select> 
+      </div>
+      <div className="current-config">
+        <div className="item"> Keycap Material: {keycaps}</div>
+        <div className="item"> Housing Material: {housing}</div>
+        <div className="item"> Switch Type: {switches} </div>
+        <div className="item"> Plate: {plate} </div>
       </div>
     </div>
   )

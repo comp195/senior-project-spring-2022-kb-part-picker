@@ -1,7 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { useParams, useNavigate, Prompt } from "react-router-dom"
 import { db, useAuth } from '../../firebase'
-import { set, ref, onValue, child } from 'firebase/database'
+import { set, ref, onValue } from 'firebase/database'
 import { uid } from "uid"
 
 import './listmaker.scss'
@@ -274,7 +274,7 @@ const ListMaker = () => {
           }  
         </select> 
 
-        {(editingEnabled.current || listSelected.current) ? <input type="text" name='New List' required className="list-name" value={curListName} onChange={(e)=>{setCurListName(e.target.value)}}/> : <></> }
+        {(editingEnabled.current) ? <input type="text" name='New List' required className="list-name" value={curListName} onChange={(e)=>{setCurListName(e.target.value)}}/> : <></> }
         <table>
           <tbody>
             {keycaps}
