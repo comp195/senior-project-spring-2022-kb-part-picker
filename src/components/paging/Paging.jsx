@@ -27,7 +27,9 @@ const Paging = (c) => {
     housing: 'Unknown',
     switches: 'Unknown',
     keycaps: 'Unknown',
-    pcb: 'Unknown'
+    pcb: 'Unknown',
+    plate: 'Unknown',
+    stabs: 'Unknown'
   })
 
   const listObtained = useRef(false)
@@ -47,7 +49,6 @@ const Paging = (c) => {
 
   const firstUpdate = useRef(true)
 
-
   const makeSpecificPartComponent = (p, index) => {
     var tempList = curListObj
     switch(category) {
@@ -63,6 +64,12 @@ const Paging = (c) => {
       case 'PCB/':
         tempList.pcb=p.product_name
         break;
+      case 'Plate/':
+        tempList.plate=p.product_name
+        break;
+      case 'Stabilizers/':
+        tempList.stabs=p.product_name
+        break;
       default:
         break;
     }
@@ -76,7 +83,7 @@ const Paging = (c) => {
         <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
         <td className="item-name"><a href={p.link}>{p.product_name}</a></td>
         {category.includes('Housing') ? (<td className="item-size">{p.size}</td>):(<></>)}
-        {category.includes('Keycaps') ? (<td className="item-material">{p.material}</td>):(<></>)}
+        {(category.includes('Keycaps') || category.includes('Plate')) ? (<td className="item-material">{p.material}</td>):(<></>)}
         {category.includes('Switches') ? (<td className="item-type">{p.type}</td>):(<></>)}
         <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
         <td className="item-add-button">

@@ -19,7 +19,9 @@ const ListMaker = () => {
     housing: 'Unknown',
     switches: 'Unknown',
     keycaps: 'Unknown',
-    pcb: 'Unknown'
+    pcb: 'Unknown',
+    plate: 'Unknown',
+    stabs: 'Unknown'
   })
 
   const [isBlocking, setIsBlocking] = useState(true)
@@ -33,6 +35,8 @@ const ListMaker = () => {
   const [housing, setHousing] = useState("")
   const [switches, setSwitches] = useState("")
   const [pcb, setPCB] = useState("")
+  const [plate, setPlate] = useState("")
+  const [stabs, setStabs] = useState("")
 
   const [dbUpdating, setDBUpdating] = useState(true)
   const [lists, setLists] = useState([])
@@ -133,6 +137,8 @@ const ListMaker = () => {
     setHousing(makeBasicPartComponent("Housing"))
     setSwitches(makeBasicPartComponent("Switches"))
     setPCB(makeBasicPartComponent("PCB"))
+    setPlate(makeBasicPartComponent("Plate"))
+    setStabs(makeBasicPartComponent("Stabilizers"))
     
     if (e === 'New' && !editingEnabled.current) {
       editingEnabled.current = true
@@ -145,6 +151,8 @@ const ListMaker = () => {
     if (!item.switches.includes("Unknown")) getPartFromDatabase('Switches/', item.switches)
     if (!item.keycaps.includes("Unknown")) getPartFromDatabase('Keycaps/', item.keycaps)
     if (!item.pcb.includes("Unknown")) getPartFromDatabase('PCB/', item.pcb)
+    if (!item.plate.includes("Unknown")) getPartFromDatabase('Plate/', item.plate)
+    if (!item.stabs.includes("Unknown")) getPartFromDatabase('Stabilizers/', item.stabs)
   }
 
   // read
@@ -185,6 +193,12 @@ const ListMaker = () => {
             case 'PCB/':
               setPCB(makeSpecificPartComponent(childSnapshot.val(), 'PCB'))
               break
+            case 'Plate/':
+              setPlate(makeSpecificPartComponent(childSnapshot.val(), 'Plate'))
+              break
+            case 'Stabilizers/':
+              setStabs(makeSpecificPartComponent(childSnapshot.val(), 'Stabilizers'))
+              break
             default:
               console.log('Problem in getPartFromDatabase()')
               return
@@ -211,7 +225,9 @@ const ListMaker = () => {
       housing: listToSave.housing,
       switches: listToSave.switches,
       keycaps: listToSave.keycaps,
-      pcb: listToSave.pcb
+      pcb: listToSave.pcb,
+      plate: listToSave.plate,
+      stabs: listToSave.stabs
     })
   }
   
@@ -238,6 +254,8 @@ const ListMaker = () => {
       setHousing(makeBasicPartComponent("Housing"))
       setSwitches(makeBasicPartComponent("Switches"))
       setPCB(makeBasicPartComponent("PCB"))
+      setPlate(makeBasicPartComponent("Plate"))
+      setStabs(makeBasicPartComponent("Stabilizers"))
     }
   })
 
@@ -281,6 +299,8 @@ const ListMaker = () => {
             {housing}
             {switches}
             {pcb}
+            {plate}
+            {stabs}
           </tbody>
         </table>
 

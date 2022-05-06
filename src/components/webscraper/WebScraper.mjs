@@ -5,7 +5,8 @@ import puppeteer from 'puppeteer'
 import response from 'express'
 
 const WebScraper = () => {
-    const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
+    //const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
+    const urls = ['https://cannonkeys.com/collections/accessories?page=1', 'https://cannonkeys.com/collections/accessories?page=2', 'https://cannonkeys.com/collections/accessories?page=3', 'https://novelkeys.com/collections/supplies']
 
     async function scrapeProduct(links) {
         const browser = await puppeteer.launch()
@@ -13,7 +14,7 @@ const WebScraper = () => {
 
         for(let i = 0; i < links.length; i++) {
             await page.goto(links[i])
-
+            console.log(i)
             const hrefs = await page.$$eval('a', as => as.map(a => a.href))
             getInfo(hrefs)
         }
@@ -35,26 +36,28 @@ const WebScraper = () => {
         const size_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[8]/div/ul/li[1]/text()'
         const mat_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/p[2]/strong[2]'
         const mat_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/h2'
-        const type_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/div/table/tbody/tr[1]/td[2]/text()'
-        const type_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/table/tbody/tr[1]/td[2]'
+        const type_ck_xp = '/html/body/div[3]/main/div/div[1]/div/div[2]/div[2]/div/table/tbody/tr[1]/td[2]'
+        const type_nk_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div/div[7]/div/table/tbody/tr[1]/td[2]'
         
         var p_img_xp = ''
         var price_xp = ''
         var mat_xp = ''
         var size_xp = ''
+        var pcb_xp = ''
         var type_xp = ''
 
         for (let i = 0; i < hrefs.length; i++) {
             const link = hrefs[i]
-
-            if(!link.includes('/product') || !link.includes('/supplies') || !link.includes('/accessories')) continue 
-
+            
+            if(!link.includes('/products/') && !link.includes('/supplies/') && !link.includes('/accessories/')) continue 
+            
             // set proper xpaths per site
             if (link.includes('cannonkeys')) {
                 p_img_xp = p_img_ck_xp
                 price_xp = price_ck_xp
                 mat_xp = mat_ck_xp
                 size_xp = size_ck_xp
+                pcb_xp = '/html/body/div[4]/main/div/div[1]/div/div[2]/div[2]/div/table/tbody/tr[1]/td[2]'
                 type_xp = type_ck_xp
             }
             else if (link.includes('novelkeys')) {
@@ -67,17 +70,18 @@ const WebScraper = () => {
             else {
                 continue
             }
-
-            await page.goto(link, {timeout: 3000000, waitUntil: 'networkidle2'})
-            
             console.log({cur: link})
-
+            await page.goto(link, {timeout: 300000, waitUntil: 'networkidle2'})
+            
             // get product name
-            const product_name = await parseJSONFromXP(page, p_name_xp, 'textContent')
+            var product_name = await parseJSONFromXP(page, p_name_xp, 'textContent')
             console.log({productName: product_name})
             
             if (product_name.includes('Unknown')) continue
             
+            var temp = product_name.replace(/[|&;$%@"<>()+,\[\]]/g, "")
+            
+            product_name = temp
             // get product image
             var img_url = await parseJSONFromXP(page, p_img_xp, 'src')
 
@@ -96,7 +100,7 @@ const WebScraper = () => {
             
             //save product to db, only if switch, keycap, or housing
             if(link.includes('/switches') && (product_name.includes('Switch') && !product_name.includes('Film'))){ 
-                var type = 'Unknown'
+                var type = await parseJSONFromXP(page, type_xp, 'textContent')
                 set (ref(db, `Switches/${product_name}`), {
                     product_name,
                     product_price,
@@ -153,49 +157,27 @@ const WebScraper = () => {
                     link
                 })
             }
-            else if(link.includes('keycaps/')) {
-                // get keycap material (abs, pbt)
-                var material = await parseJSONFromXP(page, mat_xp, 'textContent')
-
-                if (material.toLowerCase().includes('abs')) {
-                    material = 'ABS'
-                }
-                else if (material.toLowerCase().includes('pbt')) {
-                    material = 'PBT'
-                }
-                else {
-                    material = 'Unknown'
+            else if(link.includes('pcb')) {
+                var size = 'Unknown'
+                if (link.includes('cannonkeys')) size = await parseJSONFromXP(page, pcb_xp, 'textContent')
+                else if (link.includes('novelkeys')) {
+                    if (product_name.includes('87')) size = 'TKL'
+                    else if (product_name.includes('65')) size = '65'
                 }
 
-
-                set (ref(db, `Keycaps/${product_name}`), {
+                set (ref(db, `PCB/${product_name}`), {
                     product_name,
                     product_price,
                     img_url,
-                    material,
+                    size,
                     link
                 })
             }
             else if(link.includes('stabilizer')) {
-                // get keycap material (abs, pbt)
-                var material = await parseJSONFromXP(page, mat_xp, 'textContent')
-
-                if (material.toLowerCase().includes('abs')) {
-                    material = 'ABS'
-                }
-                else if (material.toLowerCase().includes('pbt')) {
-                    material = 'PBT'
-                }
-                else {
-                    material = 'Unknown'
-                }
-
-
-                set (ref(db, `Keycaps/${product_name}`), {
+                set (ref(db, `Stabilizers/${product_name}`), {
                     product_name,
                     product_price,
                     img_url,
-                    material,
                     link
                 })
             }
@@ -213,8 +195,7 @@ const WebScraper = () => {
                     material = 'Unknown'
                 }
 
-
-                set (ref(db, `Keycaps/${product_name}`), {
+                set (ref(db, `Plate/${product_name}`), {
                     product_name,
                     product_price,
                     img_url,

@@ -11,7 +11,7 @@ const Home = () => {
 
   const [keycaps, setKeycaps] = useState("None")
   const [housing, setHousing] = useState("None")
-  const [switches, setSwitches] = useState("None")
+  const [switches, setSwitches] = useState("Linear")
   const [plate, setPlate] = useState("None")
 
   const [dbUpdating, setDBUpdating] = useState(true)
