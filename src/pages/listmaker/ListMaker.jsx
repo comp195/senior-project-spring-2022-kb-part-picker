@@ -208,14 +208,15 @@ const ListMaker = () => {
   }
 
   // write
-  const writeToDatabase = () => {
+  const writeToDatabase = async() => {
+    setIsBlocking(false)
     const list_id = uid()
     const current_uid = accountName.uid
     var listToSave = curListObj
     listToSave.list_name = curListName
     listToSave.current_uid = current_uid
     listToSave.list_id = list_id
-    set (ref(db, `PartList/${list_id}`), {
+    await set (ref(db, `PartList/${list_id}`), {
       current_uid: listToSave.current_uid,
       list_id: listToSave.list_id,
       list_name: listToSave.list_name,
@@ -226,7 +227,7 @@ const ListMaker = () => {
       plate: listToSave.plate,
       stabs: listToSave.stabs
     })
-    setIsBlocking(false)
+    
     window.location.reload(true)
   }
   
