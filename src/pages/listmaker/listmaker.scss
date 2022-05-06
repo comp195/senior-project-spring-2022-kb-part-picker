@@ -73,6 +73,12 @@ button {
   left: 2px;
 }
 
+.item-remove:hover{
+    cursor: pointer;
+    color:#C89CC1;
+    transition: .3s ease;
+}
+
 @media (min-width: 768px) {
   .add-item-button {
     padding: 0.25em 0.75em;

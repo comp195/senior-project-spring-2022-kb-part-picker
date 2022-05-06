@@ -1,35 +1,14 @@
 import React from 'react';
-import { Howl } from 'howler';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { Navbar, Paging } from './components'
 import { Home, LoginForm, ListMaker } from './pages'
 
-import keyPress from "./assets/audio/linear/key_press.mp3"
-import keyRelease from "./assets/audio/linear/key_release.mp3"
 import './App.css'
 
-const press_sfx = (source) => {
-  new Howl ( {
-    src: source
-  }).play()
-}
-
-const release_sfx = (source) => {
-  new Howl ( {
-    src: source
-  }).play()
-}
-
 const App = () => {
-  const handleKeyPress = () => {
-    press_sfx(keyPress)
-  }
-
-  const handleKeyRelease = () => {
-    release_sfx(keyRelease)
-  }
+  
   return (
-    <div className='App' onKeyDown={() => handleKeyPress()} onKeyUp={() => handleKeyRelease()}>
+    <div className='App'>
       <Router>
         <Navbar />
         <Routes>

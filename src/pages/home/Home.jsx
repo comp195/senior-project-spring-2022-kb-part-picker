@@ -1,11 +1,27 @@
 import React, {useState, useRef, useLayoutEffect} from 'react'
+import { Howl } from 'howler';
 
 import { db, useAuth } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 import { TypeTest, Keyboard } from '../../components'
 import { uid } from "uid"
 
+import keyPress from "../../assets/audio/linear/key_press.mp3"
+import keyRelease from "../../assets/audio/linear/key_release.mp3"
+
 import './home.css'
+
+const press_sfx = (source) => {
+  new Howl ( {
+    src: source
+  }).play()
+}
+
+const release_sfx = (source) => {
+  new Howl ( {
+    src: source
+  }).play()
+}
 
 const Home = () => {
 
@@ -71,6 +87,14 @@ const Home = () => {
     })
   }
 
+  const handleKeyPress = () => {
+    press_sfx(keyPress)
+  }
+
+  const handleKeyRelease = () => {
+    release_sfx(keyRelease)
+  }
+
   // make sure account auth is checked before getting list from db
   const firstUpdate = useRef(true)
   useLayoutEffect(() => {
@@ -87,7 +111,7 @@ const Home = () => {
   })
   
   return (
-    <div>
+    <div onKeyDown={() => handleKeyPress()} onKeyUp={() => handleKeyRelease()}>
       <TypeTest />
       <div className="kb-container">
         <Keyboard 

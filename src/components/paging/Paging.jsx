@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
-import { NavLink, Prompt, useParams, useNavigate } from "react-router-dom";
+import { Prompt, useParams, useNavigate } from "react-router-dom";
 import { db } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 

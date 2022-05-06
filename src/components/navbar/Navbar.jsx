@@ -22,12 +22,6 @@ const Navbar = () => {
           <p> MAKE LIST </p>
         </div>
       </NavLink>
-      <a href='#features'>
-        <div className='search_img'>
-          <img src={search} alt='Search' />
-          <p> SEARCH </p>
-        </div>
-      </a>
       <NavLink to ='/login-form'>
         <div className='user_img'>
           <img src={user} alt='Sign In/Sign Up' />

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { useParams, useNavigate, Prompt } from "react-router-dom"
 import { db, useAuth } from '../../firebase'
-import { set, ref, onValue } from 'firebase/database'
+import { set, ref, onValue, remove } from 'firebase/database'
 import { uid } from "uid"
 
 import './listmaker.scss'
@@ -23,6 +23,8 @@ const ListMaker = () => {
     plate: 'Unknown',
     stabs: 'Unknown'
   })
+
+  var test = curListObj
 
   const [isBlocking, setIsBlocking] = useState(true)
   const listObtained = useRef(false)
@@ -55,7 +57,7 @@ const ListMaker = () => {
         <td className="item-add-button">
           {(listSelected.current && !editingEnabled.current) ? (<></>):(
             <>
-            <button className="add-item-button" onMouseDown={() => handleAccessPagination()} onMouseUp={() => handleGoToPagination(newTo)} onMouseLeave={() => handleSussyMouseMovement()}> 
+            <button className="add-item-button" onMouseDown={() => handleAccessPagination()} onMouseUp={() => handleGoToPagination(newTo, category)} onMouseLeave={() => handleSussyMouseMovement()}> 
               Add
             </button>
             </>
@@ -72,27 +74,17 @@ const ListMaker = () => {
         <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
         <td className="item-name"><a href={p.link}>{p.product_name}</a></td>
         <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
-        {listSelected.current ? <></> : <td className="item-remove" onClick={handleDeletePart}>X</td>}
+        {listSelected.current && !editingEnabled.current ? <></> : <td className="item-remove" onClick={() => handleDeletePart(category)}>X</td>}
       </tr>
     )
   }
 
   const handleSussyMouseMovement = () => setIsBlocking(true)
   const handleAccessPagination = () => setIsBlocking(false)
-  const handleGoToPagination = (newTo) => {
+  const handleGoToPagination = (newTo, category) => {
+    newTo.pathname = '/' + category.toLowerCase() + '/' + JSON.stringify(test)
     navigate(newTo)
     setIsBlocking(true)
-  }
-
-  const handleNothing = () => {
-    console.log(isBlocking.current)
-    console.log(editingEnabled.current)
-    return
-  }
-
-  const handleWriteList = () => {
-    console.log({curListObj})
-    return
   }
 
   const handleChangeList = async (e, ee, i=null, ls=null) => {
@@ -124,14 +116,19 @@ const ListMaker = () => {
     if (!listObtained.current) {
       await getPartFromDatabase('PartList/', e)
       item = lists[lists.findIndex(l => l.list_id === e)]
+      console.log("shersh")
       console.log({item})
     }
     else if (e === 'Edit') {
       item = i
+      test = i
     }
 
+    console.log("sheeeeee")
     console.log({item})
-    console.log({curListObj})
+    if (item) {
+      setCurListObj(item)
+    }
 
     setKeycaps(makeBasicPartComponent("Keycaps"))
     setHousing(makeBasicPartComponent("Housing"))
@@ -229,13 +226,48 @@ const ListMaker = () => {
       plate: listToSave.plate,
       stabs: listToSave.stabs
     })
+    setIsBlocking(false)
+    window.location.reload(true)
   }
   
-  // update
   // delete
+  const handleDeletePart = (category) => {
+    JSON.stringify(curListObj)
+    console.log({category})
+    switch(category) {
+      case 'Housing':
+        test.housing = 'Unknown'
+        setHousing(makeBasicPartComponent('Housing'))
+        break
+      case 'Switches':
+        test.switches = 'Unknown'
+        setSwitches(makeBasicPartComponent('Switches'))
+        break
+      case 'Keycaps':
+        test.keycaps = 'Unknown'
+        setKeycaps(makeBasicPartComponent('Keycaps'))
+        break
+      case 'PCB':
+        test.pcb = 'Unknown'
+        setPCB(makeBasicPartComponent('PCB'))
+        break
+      case 'Plate':
+        test.plate = 'Unknown'
+        setPlate(makeBasicPartComponent('Plate'))
+        break
+      case 'Stabilizers':
+        test.stabs = 'Unknown'
+        setStabs(makeBasicPartComponent('Stabilizers'))
+        break
+      default:
+        console.log('Problem in getPartFromDatabase()')
+        return
+    }
+  }
 
-  const handleDeletePart = () => {
-    return
+  const handleDeleteList = (id) => {
+    remove(ref(db, `PartList/${id}`))
+    window.location.reload(true)
   }
 
   // make sure account auth is checked before getting list from db
@@ -265,6 +297,7 @@ const ListMaker = () => {
       window.history.replaceState(null, '',  "/list-maker/makelist")
 
       setCurListObj(item)
+      test = item
 
       listObtained.current = true
       handleChangeList('Edit', true, item)
@@ -308,7 +341,10 @@ const ListMaker = () => {
           {accountName ? (
             <>
             {(listSelected.current && !editingEnabled.current) ? 
-              <button onClick={() => handleChangeList(curListID, true, null, true)}>Edit List</button>
+              <>
+                <button onClick={() => handleChangeList(curListID, true, null, true)}>Edit List</button>
+                <button onClick={() => handleDeleteList(curListID)}>Delete List</button>
+              </>
             :
               <button onClick={writeToDatabase}>Make List</button>
             }

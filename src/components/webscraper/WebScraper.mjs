@@ -46,6 +46,8 @@ const WebScraper = () => {
         var pcb_xp = ''
         var type_xp = ''
 
+        const sizes = ['60', '65', '75', '87', 'TKL']
+
         for (let i = 0; i < hrefs.length; i++) {
             const link = hrefs[i]
             
@@ -113,7 +115,7 @@ const WebScraper = () => {
                 var size = 'Unknown'
 
                 // check product name first before running another xpath check
-                const sizes = ['60', '65', '75', '87', 'TKL']
+                
                 var size_check = sizes.find(sc => product_name.includes(sc))
                 if (size_check) {
                     size = size_check
@@ -184,6 +186,12 @@ const WebScraper = () => {
             else if(link.includes('plate')) {
                 // get plate material (brass, copper, polycarbonate)
                 var material = await parseJSONFromXP(page, mat_xp, 'textContent')
+                var size = "Unknown"
+                
+                var size_check = sizes.find(sc => product_name.includes(sc))
+                if (size_check) {
+                    size = size_check
+                }
 
                 if (material.toLowerCase().includes('abs')) {
                     material = 'ABS'
@@ -200,6 +208,7 @@ const WebScraper = () => {
                     product_price,
                     img_url,
                     material,
+                    size,
                     link
                 })
             }
