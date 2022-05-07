@@ -5,8 +5,10 @@ import puppeteer from 'puppeteer'
 import response from 'express'
 
 const WebScraper = () => {
+    const urls = ['https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/keyboard-kits']
     //const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
-    const urls = ['https://cannonkeys.com/collections/accessories?page=1', 'https://cannonkeys.com/collections/accessories?page=2', 'https://cannonkeys.com/collections/accessories?page=3', 'https://novelkeys.com/collections/supplies']
+    //const urls = ['https://cannonkeys.com/collections/accessories?page=1', 'https://cannonkeys.com/collections/accessories?page=2', 'https://cannonkeys.com/collections/accessories?page=3', 'https://novelkeys.com/collections/supplies']
+    
 
     async function scrapeProduct(links) {
         const browser = await puppeteer.launch()
@@ -113,7 +115,16 @@ const WebScraper = () => {
             }
             else if(link.includes('/keyboard')) {
                 var size = 'Unknown'
-
+                var material = await parseJSONFromXP(page, '//*[@id="ProductSection-product-template"]/div/div[2]/div[2]/ul[1]/li[4]', 'textContent')
+                if (material==='Unknown') {
+                    material = await parseJSONFromXP(page, '//*[@id="ProductSection-product-template"]/div/div[2]/div[2]/ul[2]/li[1]/text()', 'textContent')
+                }
+                if(material.includes('aluminum') || material.includes('Aluminum')) {
+                    material = 'Aluminum'
+                }
+                else {
+                    material = 'Plastic'
+                }
                 // check product name first before running another xpath check
                 
                 var size_check = sizes.find(sc => product_name.includes(sc))
@@ -132,6 +143,7 @@ const WebScraper = () => {
                     product_name,
                     product_price,
                     img_url,
+                    material,
                     size,
                     link
                 })

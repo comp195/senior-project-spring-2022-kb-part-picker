@@ -7,13 +7,7 @@ import "./paging.css";
 
 
 
-const renderData = (data) => {
-  return (
-    <tbody>
-      {data}
-    </tbody>
-  )
-}
+
 
 const Paging = (c) => {
   const navigate = useNavigate()
@@ -31,6 +25,25 @@ const Paging = (c) => {
     plate: 'Unknown',
     stabs: 'Unknown'
   })
+
+  const renderData = (data) => {
+    return (
+      <tbody>
+        <tr key='names' className="column-name">
+          <td className="item-image"></td>
+          <td className="item-name">Product Name</td>
+          {category.includes('Housing') ? (<td className="item-size">Size</td>):(<></>)}
+          {(category.includes('Keycaps') || category.includes('Plate') || category.includes('Housing')) ? (<td className="item-material">Material</td>):(<></>)}
+          {category.includes('Switches') ? (<td className="item-type">Type</td>):(<></>)}
+          <td className="item-price">Price</td>
+          <td className="item-add-button">
+            
+          </td>
+        </tr>
+        {data}
+      </tbody>
+    )
+  }
 
   const listObtained = useRef(false)
   if ((state != null) && !listObtained.current) {
@@ -83,7 +96,7 @@ const Paging = (c) => {
         <td className="item-image"><img src={p.img_url} alt={p.product_name}/></td>
         <td className="item-name"><a href={p.link}>{p.product_name}</a></td>
         {category.includes('Housing') ? (<td className="item-size">{p.size}</td>):(<></>)}
-        {(category.includes('Keycaps') || category.includes('Plate')) ? (<td className="item-material">{p.material}</td>):(<></>)}
+        {(category.includes('Keycaps') || category.includes('Plate') || category.includes('Housing')) ? (<td className="item-material">{p.material}</td>):(<></>)}
         {category.includes('Switches') ? (<td className="item-type">{p.type}</td>):(<></>)}
         <td className="item-price">{Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(p.product_price)}</td>
         <td className="item-add-button">

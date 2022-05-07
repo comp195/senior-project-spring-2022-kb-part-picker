@@ -20,6 +20,10 @@ tr {
   border-bottom: 1px solid;
 }
 
+.column-name > td {
+  font-weight: 600;
+}
+
 .item-name > a {
   color: #78d0dd
 }
