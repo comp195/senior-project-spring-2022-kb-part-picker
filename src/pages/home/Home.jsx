@@ -4,33 +4,26 @@ import { Howl } from 'howler';
 import { db, useAuth } from '../../firebase'
 import { ref, onValue } from 'firebase/database'
 import { TypeTest, Keyboard } from '../../components'
-import { uid } from "uid"
 
 // clicky
 import clicky_keyPress from "../../assets/audio/clicky/key_press.mp3"
 import clicky_keyRelease from "../../assets/audio/clicky/key_release.mp3"
 import clicky_plastic_brass_keyPress from "../../assets/audio/clicky/plastic/brass/key_press.mp3"
 import clicky_alu_brass_keyPress from "../../assets/audio/clicky/alu/brass/key_press.mp3"
-import clicky_alu_pc_keyPress from "../../assets/audio/clicky/alu/pc/key_press.mp3"
 import clicky_plastic_brass_keyRelease from "../../assets/audio/clicky/plastic/brass/key_release.mp3"
 import clicky_alu_brass_keyRelease from "../../assets/audio/clicky/alu/brass/key_release.mp3"
-import clicky_alu_pc_keyRelease from "../../assets/audio/clicky/alu/pc/key_release.mp3"
 import clicky_shiftPress from "../../assets/audio/clicky/shift_press.mp3"
 import clicky_shiftRelease from "../../assets/audio/clicky/shift_release.mp3"
 import clicky_plastic_brass_shiftPress from "../../assets/audio/clicky/plastic/brass/shift_press.mp3"
 import clicky_alu_brass_shiftPress from "../../assets/audio/clicky/alu/brass/shift_press.mp3"
-import clicky_alu_pc_shiftPress from "../../assets/audio/clicky/alu/pc/shift_press.mp3"
 import clicky_plastic_brass_shiftRelease from "../../assets/audio/clicky/plastic/brass/shift_release.mp3"
 import clicky_alu_brass_shiftRelease from "../../assets/audio/clicky/alu/brass/shift_release.mp3"
-import clicky_alu_pc_shiftRelease from "../../assets/audio/clicky/alu/pc/shift_release.mp3"
 import clicky_spacePress from "../../assets/audio/clicky/space_press.mp3"
 import clicky_spaceRelease from "../../assets/audio/clicky/space_release.mp3"
 import clicky_plastic_brass_spacePress from "../../assets/audio/clicky/plastic/brass/space_press.mp3"
 import clicky_alu_brass_spacePress from "../../assets/audio/clicky/alu/brass/space_press.mp3"
-import clicky_alu_pc_spacePress from "../../assets/audio/clicky/alu/pc/space_press.mp3"
 import clicky_plastic_brass_spaceRelease from "../../assets/audio/clicky/plastic/brass/space_release.mp3"
 import clicky_alu_brass_spaceRelease from "../../assets/audio/clicky/alu/brass/space_release.mp3"
-import clicky_alu_pc_spaceRelease from "../../assets/audio/clicky/alu/pc/space_release.mp3"
 
 
 // tactile
@@ -68,11 +61,9 @@ import tactile_alu_pc_spaceRelease from "../../assets/audio/tactile/alu/pc/space
 // linear
 import linear_keyPress from "../../assets/audio/linear/key_press.mp3"
 import linear_keyRelease from "../../assets/audio/linear/key_release.mp3"
-import linear_plastic_brass_keyPress from "../../assets/audio/linear/plastic/brass/key_press.mp3"
 import linear_alu_brass_keyPress from "../../assets/audio/linear/alu/brass/key_press.mp3"
 import linear_plastic_pc_keyPress from "../../assets/audio/linear/plastic/pc/key_press.mp3"
 import linear_alu_pc_keyPress from "../../assets/audio/linear/alu/pc/key_press.mp3"
-import linear_plastic_brass_keyRelease from "../../assets/audio/linear/plastic/brass/key_release.mp3"
 import linear_alu_brass_keyRelease from "../../assets/audio/linear/alu/brass/key_release.mp3"
 import linear_plastic_pc_keyRelease from "../../assets/audio/linear/plastic/pc/key_release.mp3"
 import linear_alu_pc_keyRelease from "../../assets/audio/linear/alu/pc/key_release.mp3"
@@ -116,7 +107,7 @@ const Home = () => {
   const [housing, setHousing] = useState("None")
   const [switches, setSwitches] = useState("Linear")
   const [plate, setPlate] = useState("None")
-  var h, s, p
+  var realtime_housing_updater, realtime_switches_updater, realtime_plate_updater
 
   const [dbUpdating, setDBUpdating] = useState(true)
   const [curListID, setCurListID] = useState("")
@@ -302,20 +293,20 @@ const Home = () => {
               if (childSnapshot.val().material) {
                 console.log('house')
                 if (!childSnapshot.val().material.includes('Unknown')) {
-                  h = childSnapshot.val().material
-                  setHousing(h)
+                  realtime_housing_updater = childSnapshot.val().material
+                  setHousing(realtime_housing_updater)
                 }
               }
               break
             case 'Switches/':
               console.log('switch')
-              s = childSnapshot.val().type
-              if (!childSnapshot.val().type.includes('Unknown')) setSwitches(s)
+              realtime_switches_updater = childSnapshot.val().type
+              if (!childSnapshot.val().type.includes('Unknown')) setSwitches(realtime_switches_updater)
               break
             case 'Plate/':
               console.log('plate')
-              p = childSnapshot.val().material
-              if (!childSnapshot.val().material.includes('Unknown')) setPlate(p)
+              realtime_plate_updater = childSnapshot.val().material
+              if (!childSnapshot.val().material.includes('Unknown')) setPlate(realtime_plate_updater)
               break
             default:
               console.log('Problem in getPartFromDatabase()')

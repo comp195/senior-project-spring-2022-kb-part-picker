@@ -24,7 +24,7 @@ const ListMaker = () => {
     stabs: 'Unknown'
   })
 
-  var test = curListObj
+  var realtime_list_updater = curListObj
 
   const [isBlocking, setIsBlocking] = useState(true)
   const listObtained = useRef(false)
@@ -82,7 +82,7 @@ const ListMaker = () => {
   const handleSussyMouseMovement = () => setIsBlocking(true)
   const handleAccessPagination = () => setIsBlocking(false)
   const handleGoToPagination = (newTo, category) => {
-    newTo.pathname = '/' + category.toLowerCase() + '/' + JSON.stringify(test)
+    newTo.pathname = '/' + category.toLowerCase() + '/' + JSON.stringify(realtime_list_updater)
     navigate(newTo)
     setIsBlocking(true)
   }
@@ -121,7 +121,7 @@ const ListMaker = () => {
     }
     else if (e === 'Edit') {
       item = i
-      test = i
+      realtime_list_updater = i
     }
 
     console.log("sheeeeee")
@@ -237,27 +237,27 @@ const ListMaker = () => {
     console.log({category})
     switch(category) {
       case 'Housing':
-        test.housing = 'Unknown'
+        realtime_list_updater.housing = 'Unknown'
         setHousing(makeBasicPartComponent('Housing'))
         break
       case 'Switches':
-        test.switches = 'Unknown'
+        realtime_list_updater.switches = 'Unknown'
         setSwitches(makeBasicPartComponent('Switches'))
         break
       case 'Keycaps':
-        test.keycaps = 'Unknown'
+        realtime_list_updater.keycaps = 'Unknown'
         setKeycaps(makeBasicPartComponent('Keycaps'))
         break
       case 'PCB':
-        test.pcb = 'Unknown'
+        realtime_list_updater.pcb = 'Unknown'
         setPCB(makeBasicPartComponent('PCB'))
         break
       case 'Plate':
-        test.plate = 'Unknown'
+        realtime_list_updater.plate = 'Unknown'
         setPlate(makeBasicPartComponent('Plate'))
         break
       case 'Stabilizers':
-        test.stabs = 'Unknown'
+        realtime_list_updater.stabs = 'Unknown'
         setStabs(makeBasicPartComponent('Stabilizers'))
         break
       default:
@@ -298,7 +298,7 @@ const ListMaker = () => {
       window.history.replaceState(null, '',  "/list-maker/makelist")
 
       setCurListObj(item)
-      test = item
+      realtime_list_updater = item
 
       listObtained.current = true
       handleChangeList('Edit', true, item)

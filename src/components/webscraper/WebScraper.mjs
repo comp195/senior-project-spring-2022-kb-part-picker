@@ -1,12 +1,15 @@
-import {fire, db} from './firebase.mjs'
+import {db} from './firebase.mjs'
 import {set, ref} from 'firebase/database'
-import {uid} from "uid"
 import puppeteer from 'puppeteer'
-import response from 'express'
 
+/* 
+    this is run in the command line
+    node ~/src/components/webscraper/WebScraper.mjs
+    top url array is for keycaps, switches, cases
+    bottom url array is for pcb, plates, and stabs
+*/
 const WebScraper = () => {
-    const urls = ['https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/keyboard-kits']
-    //const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
+    const urls = ['https://cannonkeys.com/collections/cannonkeys-keycaps', 'https://novelkeys.com/collections/keycaps', 'https://novelkeys.com/collections/switches', 'https://novelkeys.com/collections/keyboards', 'https://cannonkeys.com/collections/switches/', 'https://cannonkeys.com/collections/keyboard-kits']
     //const urls = ['https://cannonkeys.com/collections/accessories?page=1', 'https://cannonkeys.com/collections/accessories?page=2', 'https://cannonkeys.com/collections/accessories?page=3', 'https://novelkeys.com/collections/supplies']
     
 

@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from '../../firebase'
 
 import list from '../../assets/nav/list.png'
-import search from '../../assets/nav/search.png'
 import user from '../../assets/nav/user.png'
 import './navbar.css'
 

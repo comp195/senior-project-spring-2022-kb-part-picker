@@ -5,10 +5,6 @@ import { ref, onValue } from 'firebase/database'
 
 import "./paging.css";
 
-
-
-
-
 const Paging = (c) => {
   const navigate = useNavigate()
   const [isBlocking, setIsBlocking] = useState(true)
