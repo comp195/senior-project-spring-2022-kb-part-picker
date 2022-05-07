@@ -9,3 +9,5 @@ A website to compile custom keyboard parts similar to what PC Part Picker does f
 <h3>Members</h3>
 <ul> Rejan Quebral - r_quebral@u.pacific.edu
 </ul>
+<h3> Site URL </h3>
+https://kb-part-picker.web.app/
