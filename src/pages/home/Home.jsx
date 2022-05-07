@@ -340,7 +340,7 @@ const Home = () => {
   }
 
   const handleKeyRelease = (e) => {
-    if(e.key==='Space') {
+    if(e.keyCode===32) {
       release_sfx(spaceRelease)
     }
     else if (e.key==='Shift') {
